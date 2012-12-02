@@ -48,7 +48,7 @@ However, I still tried to see if the algorithm worked. Here are the results:
 
 The training dataset (manually created):
 
-```
+```Coffeescript
 trainingDataset =
   "Twitter to sue Google over twitter stream monetization": ["Technology", "Twitter", "Google", "Internet"]
   "A new library open in the east center": ["city","library","nyc"]
