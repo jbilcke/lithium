@@ -1,0 +1,26 @@
+{
+  "name": "cutoff",
+  "description": "filter unwanted noise out of your news streams",
+  "version": "0.0.6",
+  "author": "Julian Bilcke <julian.bilcke@daizoru.com>",
+  "scripts"     : {
+    "test"      : "node_modules/mocha/bin/mocha --bail --require chai --compilers coffee:coffee-script test/*.coffee",
+    "build"     : "node_modules/coffee-script/bin/coffee --compile --output lib/ src/",
+    "watch"     : "node_modules/coffee-script/bin/coffee --watch --compile --output lib/ src/"
+  },
+  "main" : "./lib/cutoff",
+  "repository": "http://github.com/daizoru/node-cutoff.git",
+  "keywords": [
+    "recommendation system",
+    "recommendation engine",
+    "machine learning"
+  ],
+  "license": "BSD",
+  "dependencies": {
+  },
+  "devDependencies" : {
+     "coffee-script"  : "1.4.0",
+      "mocha": "1.7.x",
+      "chai" : "1.3.x"
+   }
+}
