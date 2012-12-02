@@ -1,95 +1,59 @@
 
-node-cutoff
-===========
+node-fussy
+==========
 
-*filter unwanted noise out of your news streams*
-
-alternative title:
-
-*your very own filter bubble*
-
-
-## WARNING
-
-WARNING: THIS PROJECT IS EXPERIMENTAL AND A WORK IN PROGRESS,
-UNTIL IT IS RELEASED PLEASE DO NOT EXPECT IT TO WORK OR BE DEVELOPER-FRIENDLY
+*A recommendation engine that care about user actions*
 
 ## Presentation
 
-cutoff is a simple noise filtering engine:
+Fussy is a minimalist recommendation engine. It filter unwanted noise out of your news streams,
+but not too much: fussy will watch carefully and try to suggest things from time to time.
+If you change your mind later, fussy will detect it, and adjust your profile a.k.a "filter bubble",
+so that it is not a bubble anymore.
 
-cutoff will try to find articles and tweets that correspond to your tastes,
-and also randomly propose new topics (those will have less probability of appearing).
+It's sounds like magic, but you can trust fussy. Because you know, he is very picky.
 
-Then you will have the possibility of either ignoring, liking or disliking the feed.
+## How it works
 
-The more you like a topic, the more articles talking about it will appear in your feed.
-if you don't like a topic, the less they should.
+Everytime your do actions, it will impact their profile, adding or removing a "weight" somewhere. 
+That's why Fussy can fix profiles back.
 
-Since these are just probabilities, you will still find new, original articles
-you didn't expect (that's the magic of maths and internet!)
-so f you happen to change your mind, topics you were not interested in before
-might become a trend in your private stream.
+## Installation
 
-## Technology
+    $ npm install fussy
 
-node-cutoff is composed of two main components:
+## Documentation
 
-### Automatic topic detection
+### Automatic text tagging
 
-This works using a manually-created dataset, and feeding it to cutoff,
-so it can learn from it.
+Fussy has a built-in text tagger. 
 
-How well does it perform?
-For now I only managed to manually create 10 fake titles + tags,
-so it is probably too small to be statistically significant.
+#### Learning tags
+To make it work, you just have to train Fussy on a curated dataset, and he will do the rest: 
 
-However, I still tried to see if the algorithm worked. Here are the results:
-
-The training dataset (manually created):
-
-```Coffeescript
-trainingDataset =
-  "Twitter to sue Google over twitter stream monetization": ["Technology", "Twitter", "Google", "Internet"]
-  "A new library open in the east center": ["city","library","nyc"]
-  "Rumors: Apple to launch a new tablet for emerging markets": ["Technology", "Apple", "Rumor"]
-  "Microsoft reveal its new data center": ["Technology", "Rumor", "Microsoft"]
-  "An energy-friendly data center for emerging countries": ["Technology", "World", "Energy"]
-  "History of the countries: world music festival at the museum": ["Music", "City","Culture"]
-  "Visiting a museum is good for health": ["Health", "Culture"]
-  "Using home brew to install appplications on your Apple macbook": ["Computers", "Software", "Apple"]
-  "How to brew your own beer": ["DIY", "Fooding", "Beverages", "Beer"]
-  "Facebook to reveal a new open source library": ["Opensource","Technology","Facebook","Social Networks"]
-  "Open source conference give free beer to first 50 people": ["Opensource","Beer","Conference"]
-  "What is in people's head? an in-depth data analysis": ["Psychology"]
+```CoffeeScript
+fussy = require 'fussy'
+database = new fussy.Database()
+database.learn
+  "a short test text": ["keyword one", "keyword two"]
+  "a second text": ["keyword one", "a new keyword"]
 ```
 
-The test data:
+#### Tagging words
 
-```Coffeescript
-testing = [
-  'Visit the museum using your tablet'
-  'How to brew your own coffee'
-  'Google to launch a new museum app'
-  'Apple to sue Microsoft
+Then you can use it to tag text:
+
+```CoffeeScript
+database.tag [
+  " a second test"
 ]
 ```
 
-once auto-tagged:
-
-```Coffeescript
-tagged =
-  'Visit the museum using your tablet': [ 'Music', 'City', 'Culture' ]
-  'How to brew your own coffee': [ 'DIY', 'Fooding', 'Beverages' ]
-  'Google to launch a new museum app': [ 'Technology', 'Apple', 'Rumor' ]
-  'Apple to sue Microsoft': [ 'Technology', 'Apple', 'Rumor' ] 
-```
+### User recommendation
 
 
+## Changelog
 
+#### 0.0.0
 
-(More in it later)
-
-### User profile learning
-
-(More in it later)
+ * Initial version, not very documented

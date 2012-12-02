@@ -1,7 +1,7 @@
 {
-  "name": "cutoff",
-  "description": "filter unwanted noise out of your news streams",
-  "version": "0.0.6",
+  "name": "fussy",
+  "description": "A recommendation engine that care about user actions",
+  "version": "0.0.0",
   "author": "Julian Bilcke <julian.bilcke@daizoru.com>",
   "scripts"     : {
     "test"      : "node_modules/mocha/bin/mocha --bail --require chai --compilers coffee:coffee-script test/*.coffee",
@@ -9,7 +9,7 @@
     "watch"     : "node_modules/coffee-script/bin/coffee --watch --compile --output lib/ src/"
   },
   "main" : "./lib/cutoff",
-  "repository": "http://github.com/daizoru/node-cutoff.git",
+  "repository": "http://github.com/jbilcke/node-fussy.git",
   "keywords": [
     "recommendation system",
     "recommendation engine",
@@ -17,6 +17,7 @@
   ],
   "license": "BSD",
   "dependencies": {
+    "deck" : "0.0.4"
   },
   "devDependencies" : {
      "coffee-script"  : "1.4.0",
