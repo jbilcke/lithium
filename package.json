@@ -8,7 +8,7 @@
     "build"     : "node_modules/coffee-script/bin/coffee --compile --output lib/ src/",
     "watch"     : "node_modules/coffee-script/bin/coffee --watch --compile --output lib/ src/"
   },
-  "main" : "./lib/cutoff",
+  "main" : "./lib/fussy",
   "repository": "http://github.com/jbilcke/node-fussy.git",
   "keywords": [
     "recommendation system",
