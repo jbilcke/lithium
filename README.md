@@ -15,7 +15,7 @@ It's sounds like magic, but you can trust fussy. Because you know, he is very pi
 
 ## How it works
 
-Everytime you can profile.learn(), this will increment or decrement weights in the network of tags.
+Everytime you call profile#learn() this will increment or decrement some weights in the underlying network of tags.
 That's why Fussy can fix profiles back: you can decrement the importance of keywords dynamically,
 hours, days or months after liking them.
 
