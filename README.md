@@ -43,11 +43,31 @@ so it can learn from it.
 How well does it perform?
 For now I only managed to manually create 10 fake titles + tags,
 so it is probably too small to be statistically significant.
-However, I still tried to see if the algorithm worked. Here are the results,
-on 4 additionnal, untagged titles: 
+
+However, I still tried to see if the algorithm worked. Here are the results:
+
+The training dataset (manually created):
+
+```
+trainingDataset =
+  "Twitter to sue Google over twitter stream monetization": ["Technology", "Twitter", "Google", "Internet"]
+  "A new library open in the east center": ["city","library","nyc"]
+  "Rumors: Apple to launch a new tablet for emerging markets": ["Technology", "Apple", "Rumor"]
+  "Microsoft reveal its new data center": ["Technology", "Rumor", "Microsoft"]
+  "An energy-friendly data center for emerging countries": ["Technology", "World", "Energy"]
+  "History of the countries: world music festival at the museum": ["Music", "City","Culture"]
+  "Visiting a museum is good for health": ["Health", "Culture"]
+  "Using home brew to install appplications on your Apple macbook": ["Computers", "Software", "Apple"]
+  "How to brew your own beer": ["DIY", "Fooding", "Beverages", "Beer"]
+  "Facebook to reveal a new open source library": ["Opensource","Technology","Facebook","Social Networks"]
+  "Open source conference give free beer to first 50 people": ["Opensource","Beer","Conference"]
+  "What is in people's head? an in-depth data analysis": ["Psychology"]
+```
+
+The test data:
 
 ```Coffeescript
-[
+testing = [
   'Visit the museum using your tablet'
   'How to brew your own coffee'
   'Google to launch a new museum app'
@@ -63,7 +83,7 @@ tagged =
   'How to brew your own coffee': [ 'DIY', 'Fooding', 'Beverages' ]
   'Google to launch a new museum app': [ 'Technology', 'Apple', 'Rumor' ]
   'Apple to sue Microsoft': [ 'Technology', 'Apple', 'Rumor' ] 
-```
+``
 
 
 
