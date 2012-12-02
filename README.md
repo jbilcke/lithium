@@ -6,7 +6,7 @@ node-fussy
 
 ## Presentation
 
-Fussy is a minimalist recommendation engine. It filter unwanted noise out of your news streams,
+Fussy is a minimalist recommendation engine. It filters unwanted noise out of your news streams,
 but not too much: fussy will watch carefully and try to suggest things from time to time.
 If you change your mind later, fussy will detect it, and adjust your profile a.k.a "filter bubble",
 so that it is not a bubble anymore.
@@ -15,8 +15,9 @@ It's sounds like magic, but you can trust fussy. Because you know, he is very pi
 
 ## How it works
 
-Everytime your users do actions, this will impact the Profile, adding or removing a "weight" somewhere. 
-That's why Fussy can fix profiles back.
+Everytime you can profile.learn(), this will increment or decrement weights in the network of tags.
+That's why Fussy can fix profiles back: you can decrement the importance of keywords dynamically,
+hours, days or months after liking them.
 
 ## Installation
 
