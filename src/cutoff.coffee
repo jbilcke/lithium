@@ -74,14 +74,14 @@ enrichData = (db, raw) ->
             keywords[keyword] = 0
           keywords[keyword] += value
     keywords
-  guessTopKeywords = (db, txt) ->
+  guessTopKeywords = (db, txt, maxKeywords=3, minWeight=2) ->
     keywords = getAllKeywords db, txt
     #console.log "keywords: " + pretty keywords
     top = []
     # for now we ignore the weight, but of course it is important
     for keyword, weight of keywords
-      continue if weight < 3
-      break if top.length > 2
+      continue if weight < minWeight
+      break if top.length >= maxKeywords
       top.push keyword
     top
 
