@@ -15,7 +15,7 @@ It's sounds like magic, but you can trust fussy. Because you know, he is very pi
 
 ## How it works
 
-Everytime your do actions, it will impact their profile, adding or removing a "weight" somewhere. 
+Everytime your users do actions, this will impact the Profile, adding or removing a "weight" somewhere. 
 That's why Fussy can fix profiles back.
 
 ## Installation
