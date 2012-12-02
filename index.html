@@ -1,0 +1,144 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Node Fussy by jbilcke</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <script src="javascripts/scale.fix.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1 class="header">Node Fussy</h1>
+        <p class="header">A recommendation engine that care about user actions</p>
+
+        <ul>
+          <li class="download"><a class="buttons" href="https://github.com/jbilcke/node-fussy/zipball/master">Download ZIP</a></li>
+          <li class="download"><a class="buttons" href="https://github.com/jbilcke/node-fussy/tarball/master">Download TAR</a></li>
+          <li><a class="buttons github" href="https://github.com/jbilcke/node-fussy">View On GitHub</a></li>
+        </ul>
+
+        <p class="header">This project is maintained by <a class="header name" href="https://github.com/jbilcke">jbilcke</a></p>
+
+
+      </header>
+      <section>
+        <h1>node-fussy</h1>
+
+<p><em>A recommendation engine that care about user actions</em></p>
+
+<h2>Presentation</h2>
+
+<p>Fussy is a minimalist recommendation engine. It filters unwanted noise out of your news streams,
+but not too much: fussy will watch carefully and try to suggest things from time to time.
+If you change your mind later, fussy will detect it, and adjust your profile a.k.a "filter bubble",
+so that it is not a bubble anymore.</p>
+
+<p>It's sounds like magic, but you can trust fussy. Because you know, he is very picky.</p>
+
+<h2>How it works</h2>
+
+<p>Everytime you call profile#learn() this will increment or decrement some weights in the underlying network of tags.
+That's why Fussy can fix profiles back: you can decrement the importance of keywords dynamically,
+hours, days or months after liking them.</p>
+
+<h2>Installation</h2>
+
+<pre><code>$ npm install fussy
+</code></pre>
+
+<h2>Demo</h2>
+
+<div class="highlight"><pre><span class="p">{</span><span class="nx">Database</span><span class="p">,</span> <span class="nx">Profile</span><span class="p">}</span> <span class="o">=</span> <span class="nx">require</span> <span class="s">'fussy'</span>
+<span class="nv">database = </span><span class="k">new</span> <span class="nx">Database</span><span class="p">()</span>
+<span class="nx">database</span><span class="p">.</span><span class="nx">learn</span>
+  <span class="s">"Twitter to sue Google over twitter stream monetization"</span><span class="o">:</span> <span class="p">[</span><span class="s">"Technology"</span><span class="p">,</span> <span class="s">"Twitter"</span><span class="p">,</span> <span class="s">"Google"</span><span class="p">,</span> <span class="s">"Internet"</span><span class="p">]</span>
+  <span class="s">"A new library open in the east center in NYC"</span><span class="o">:</span> <span class="p">[</span><span class="s">"city"</span><span class="p">,</span><span class="s">"library"</span><span class="p">,</span><span class="s">"nyc"</span><span class="p">]</span>
+  <span class="s">"Rumors: Apple to launch a new tablet for emerging markets"</span><span class="o">:</span> <span class="p">[</span><span class="s">"Technology"</span><span class="p">,</span> <span class="s">"Apple"</span><span class="p">,</span> <span class="s">"Rumor"</span><span class="p">]</span>
+  <span class="s">"Microsoft reveal its new data center"</span><span class="o">:</span> <span class="p">[</span><span class="s">"Technology"</span><span class="p">,</span> <span class="s">"Rumor"</span><span class="p">,</span> <span class="s">"Microsoft"</span><span class="p">]</span>
+  <span class="s">"An energy-friendly data center for emerging countries"</span><span class="o">:</span> <span class="p">[</span><span class="s">"Technology"</span><span class="p">,</span> <span class="s">"World"</span><span class="p">,</span> <span class="s">"Energy"</span><span class="p">]</span>
+  <span class="s">"History of the countries: world music festival at the museum"</span><span class="o">:</span> <span class="p">[</span><span class="s">"Music"</span><span class="p">,</span> <span class="s">"City"</span><span class="p">,</span><span class="s">"Culture"</span><span class="p">]</span>
+  <span class="s">"Visiting a museum is good for health"</span><span class="o">:</span> <span class="p">[</span><span class="s">"Health"</span><span class="p">,</span> <span class="s">"Culture"</span><span class="p">]</span>
+  <span class="s">"Using home brew to install appplications on your Apple macbook"</span><span class="o">:</span> <span class="p">[</span><span class="s">"Computers"</span><span class="p">,</span> <span class="s">"Software"</span><span class="p">,</span> <span class="s">"Apple"</span><span class="p">]</span>
+  <span class="s">"How to brew your own beer"</span><span class="o">:</span> <span class="p">[</span><span class="s">"DIY"</span><span class="p">,</span> <span class="s">"Fooding"</span><span class="p">,</span> <span class="s">"Beverages"</span><span class="p">,</span> <span class="s">"Beer"</span><span class="p">]</span>
+  <span class="s">"Facebook to reveal a new open source library"</span><span class="o">:</span> <span class="p">[</span><span class="s">"Opensource"</span><span class="p">,</span><span class="s">"Technology"</span><span class="p">,</span><span class="s">"Facebook"</span><span class="p">,</span><span class="s">"Social Networks"</span><span class="p">]</span>
+
+<span class="nv">profile = </span><span class="k">new</span> <span class="nx">Profile</span><span class="p">()</span>
+
+<span class="c1"># news to ask the user for like/dislike</span>
+<span class="nv">training = </span><span class="nx">database</span><span class="p">.</span><span class="nx">tag</span> <span class="p">[</span>
+  <span class="s">"Visit the NYC museum using your tablet"</span>
+  <span class="s">"How to brew your own coffee"</span>
+  <span class="s">"Google to launch a new museum app"</span>
+  <span class="s">"Apple to sue Microsoft"</span>
+<span class="p">]</span>
+
+<span class="k">for</span> <span class="nx">txt</span><span class="p">,</span> <span class="nx">keywords</span> <span class="k">of</span> <span class="nx">training</span>
+
+  <span class="c1"># +1: like, 0: indifference, -1: dislike </span>
+  <span class="nv">choice = </span><span class="mi">1</span>
+
+  <span class="nx">profile</span><span class="p">.</span><span class="nx">learn</span> <span class="nx">txt</span><span class="p">,</span> <span class="nx">keywords</span><span class="p">,</span> <span class="nx">choice</span>
+
+<span class="c1"># news to sort / rate</span>
+<span class="nv">news = </span><span class="nx">database</span><span class="p">.</span><span class="nx">tag</span> <span class="p">[</span>
+  <span class="s">"Open source conference give free beer to first 50 people in NY"</span>
+  <span class="s">"What is in people's head? an in-depth data analysis"</span>
+<span class="p">]</span>
+<span class="nv">recommendations = </span><span class="nx">profile</span><span class="p">.</span><span class="nx">recommend</span> <span class="nx">news</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="s">"--&gt; </span><span class="si">#{</span><span class="nb">Object</span><span class="p">.</span><span class="nx">keys</span> <span class="nx">recommendations</span><span class="si">}</span><span class="s">"</span>
+</pre></div>
+
+<h2>Documentation</h2>
+
+<h3>Automatic text tagging</h3>
+
+<p>Fussy has a built-in text tagger. </p>
+
+<h4>Learning tags</h4>
+
+<p>Fussy need to learn tags from an existing dataset: </p>
+
+<div class="highlight"><pre><span class="nv">fussy = </span><span class="nx">require</span> <span class="s">'fussy'</span>
+<span class="nv">database = </span><span class="k">new</span> <span class="nx">fussy</span><span class="p">.</span><span class="nx">Database</span><span class="p">()</span>
+<span class="nx">database</span><span class="p">.</span><span class="nx">learn</span>
+  <span class="s">"a short test text"</span><span class="o">:</span> <span class="p">[</span><span class="s">"keyword one"</span><span class="p">,</span> <span class="s">"keyword two"</span><span class="p">]</span>
+  <span class="s">"a second text"</span><span class="o">:</span> <span class="p">[</span><span class="s">"keyword one"</span><span class="p">,</span> <span class="s">"a new keyword"</span><span class="p">]</span>
+</pre></div>
+
+<h4>Tagging words</h4>
+
+<p>Then you can use it to tag text:</p>
+
+<div class="highlight"><pre><span class="nv">tagged = </span><span class="nx">database</span><span class="p">.</span><span class="nx">tag</span> <span class="p">[</span>
+  <span class="s">" a second test"</span>
+<span class="p">]</span>
+</pre></div>
+
+<h3>User recommendation</h3>
+
+<p>To be continued, see the example</p>
+
+<h2>Changelog</h2>
+
+<h4>0.0.0</h4>
+
+<ul>
+<li>Initial version, not very documented</li>
+</ul>
+      </section>
+      <footer>
+        <p><small>Hosted on <a href="https://pages.github.com">GitHub Pages</a> using the Dinky theme</small></p>
+      </footer>
+    </div>
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+		
+  </body>
+</html>
