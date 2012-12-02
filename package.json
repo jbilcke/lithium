@@ -1,6 +1,6 @@
 {
   "name": "fussy",
-  "description": "A recommendation engine that care about user actions",
+  "description": "A recommendation engine that cares about user actions",
   "version": "0.0.0",
   "author": "Julian Bilcke <julian.bilcke@daizoru.com>",
   "scripts"     : {
