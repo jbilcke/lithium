@@ -20,27 +20,23 @@ trainingDataset =
   "How to brew your own beer": ["DIY", "Fooding", "Beverages", "Beer"]
   "Facebook to reveal a new open source library": ["Opensource","Technology","Facebook","Social Networks"]
   "Open source conference give free beer to first 50 people": ["Opensource","Beer","Conference"]
-  "What is in people's head? an in-deep data analysis": ["Psychology"]
+  "What is in people's head? an in-depth data analysis": ["Psychology"]
 
 
-
+#################################
+# EXTRACT N-GRAMS FROM A STRING #
+#################################
 ngramize = (words, n) ->
-  #console.log "NGRAMIZE #{n}"
   unless Array.isArray words
     words = words.split ' '
   grams = {}
-
   if n < 2
     for w in words
       grams["#{w}"] = if Array.isArray(w) then w else [w]
-    #console.log "res: #{res}"
     return grams
-
   for i in [0...words.length]
     gram = words[i...i+n]
-    #console.log "subgramable: #{gram}"
     subgrams = ngramize gram, n - 1
-    #console.log "subgrams: #{inspect subgrams}"
     for k,v of subgrams
       grams[k] = v
     if i > words.length - n
@@ -48,39 +44,38 @@ ngramize = (words, n) ->
     grams["#{gram}"] = gram
   grams
 
-#console.log pretty ngramize "What is in people's head? an in-deep data analysis", 4
+#######################################################
+# LEARN FROM THE DATASET AND BUILD A WEIGHTED NETWORK #
+#######################################################
+createDatabaseFromDataset = (set, size=3) ->
+  db = {}
+  for txt, keywords of set
+    for n, ngram of ngramize txt, size
+      unless n of db
+        db[n] = ngram: ngram, keywords: {}
+      for key in keywords
+        unless key of db[n].keywords
+          db[n].keywords[key] = 0
+        db[n].keywords[key] += 1
+  db
 
-##########################
-# LEARN FROM THE DATASET #
-########################## 
-database = {}
-for title, keywords of trainingDataset
-  for ngramString, ngramArray of ngramize title, 3
-    unless ngramString of database
-      database[ngramString] = ngram: ngramArray, keywords: {}
-    for keyword in keywords
-      unless keyword of database[ngramString].keywords
-        database[ngramString].keywords[keyword] = 0
-      database[ngramString].keywords[keyword] += 1
-
-console.log pretty database
-
-enrichData = (raw) ->
-
-  getAllKeywords = (txt) ->
+#######################################
+# AUTOMATIC KEYWORD TAGGING OF A TEXT #
+#######################################
+enrichData = (db, raw) ->
+  getAllKeywords = (db, txt) ->
     grams = ngramize title, 3
     #console.log "grams: " + pretty grams
     keywords = {}
     for ngramString, ngramArray of grams
-      if ngramString of database
-        for keyword, value of database[ngramString].keywords
+      if ngramString of db
+        for keyword, value of db[ngramString].keywords
           unless keyword of keywords
             keywords[keyword] = 0
           keywords[keyword] += value
     keywords
-
-  guessTopKeywords = (txt) ->
-    keywords = getAllKeywords txt
+  guessTopKeywords = (db, txt) ->
+    keywords = getAllKeywords db, txt
     #console.log "keywords: " + pretty keywords
     top = []
     # for now we ignore the weight, but of course it is important
@@ -90,19 +85,21 @@ enrichData = (raw) ->
       top.push keyword
     top
 
-
   enriched = {}
   for title in raw
-    top = guessTopKeywords title
+    top = guessTopKeywords db, title
     console.log "top: "  +pretty top
     enriched["#{title}"] = top
   enriched
 
 
-
-userFeedback = (feed, feedback) ->
-  choice = 1 # Math.round Math.random() * 2 - 1
-  feedback feed, choice
+##########################
+# WAIT FOR USER FEEDBACK #
+##########################
+userFeedback = (txt, keywords, feedback) ->
+  console.log " --> Show to user: #{pretty txt} (#{pretty keywords.join(', ')}) (MORE) (LESS)"
+  choice = Math.round Math.random() * 2 - 1
+  feedback txt, keywords, choice
 
 rawData = [
   "Visit the museum using your tablet"
@@ -111,18 +108,21 @@ rawData = [
   "Apple to sue Microsoft"
 ]
 
-enrichedData = enrichData rawData
+database = createDatabaseFromDataset trainingDataset
+console.log pretty database
+
+enrichedData = enrichData database, rawData
 console.log "enriched data: " + pretty enrichedData
 
-for feed in feeds
-  console.log "waiting for user feedback on " + pretty feed
-  userFeedback feed, (feed, choice) ->
+for txt, keywords of enrichedData
+  userFeedback txt, keywords, (txt, keywords, choice) ->
+    choices = '1': 'more','-1':'less','0': 'ignore'
+    console.log " <-- user choose: #{choices[choice.toString()]}"
     if choice is 0
-      console.log "do nothing for feed " + pretty feed
+      console.log "do nothing for " + pretty txt
       return
 
-    keywords = guessTopKeywords feed
-    console.log "feed keywords: " + pretty keywords
+
       # TODO download the page
             
       # extract words from description

@@ -37,8 +37,35 @@ node-cutoff is composed of two main components:
 
 ### Automatic topic detection
 
-This works using a maually-created dataset, and feeding it to cutoff,
+This works using a manually-created dataset, and feeding it to cutoff,
 so it can learn from it.
+
+How well does it perform?
+For now I only managed to manually create 10 fake titles + tags,
+so it is probably too small to be statistically significant.
+However, I still tried to see if the algorithm worked. Here are the results,
+on 4 additionnal, untagged titles: 
+
+```Coffeescript
+[
+  'Visit the museum using your tablet'
+  'How to brew your own coffee'
+  'Google to launch a new museum app'
+  'Apple to sue Microsoft
+]
+```
+
+once auto-tagged:
+
+```Coffeescript
+tagged =
+  'Visit the museum using your tablet': [ 'Music', 'City', 'Culture' ]
+  'How to brew your own coffee': [ 'DIY', 'Fooding', 'Beverages' ]
+  'Google to launch a new museum app': [ 'Technology', 'Apple', 'Rumor' ]
+  'Apple to sue Microsoft': [ 'Technology', 'Apple', 'Rumor' ] 
+```
+
+
 
 (More in it later)
 
