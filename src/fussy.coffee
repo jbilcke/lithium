@@ -1,5 +1,6 @@
 {inspect} = require 'util'
 deck = require 'deck'
+
 pretty = (obj) -> "#{inspect obj, no, 20, yes}"
 wait = (t) -> (f) -> setTimeout f, t
 
@@ -31,9 +32,6 @@ class Database
   constructor: (@_={}) ->
     @ngramSize = 3
 
-  ##########################
-  # LEARN FROM TAGGED TEXT #
-  ##########################
   learn: (tagged) =>
     for txt, keywords of tagged
       for n, ngram of ngramize txt, @ngramSize
@@ -43,6 +41,7 @@ class Database
           unless key of @_[n].keywords
             @_[n].keywords[key] = 0
           @_[n].keywords[key] += 1
+    @
 
   ##################################################
   # AUTOMATIC KEYWORD TAGGING OF A LIST OF STRINGS #
@@ -52,11 +51,8 @@ class Database
       tagged = {}
       for txt in untagged
         tagged["#{txt}"] = @tag txt
-
-      # auto-learn from the tagging?
-      if learn
+      if learn # auto-learn from the tagging?
         @learn tagged
-
       tagged
     else
       keywords = {}
@@ -68,12 +64,12 @@ class Database
             keywords[k] += count
       keywords
 
+
   toString: => pretty @_
   
 
 class Profile
-  constructor: (@_) ->
-    @_ = {}
+  constructor: (@_={}) ->
 
   learn: (txt, keywords=[], choice=0) =>
     for word, value of keywords
@@ -107,11 +103,11 @@ class Profile
   recommend: (tagged=[]) =>
     tmp = for txt, keywords of tagged
       score = @guess txt, keywords
-      [txt, 1 + score]
+      [txt, (1 + score) * 0.5]
     tmp.sort (a,b) -> b[1] - a[1]
     for i in tmp
       txt: i[0]
-      score: i[1] - 1
+      score: i[1]
 
 exports.Database = Database
 exports.Profile = Profile
