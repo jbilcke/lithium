@@ -1,31 +1,38 @@
-{inspect} = require 'util'
-Twitter = require 'ntwitter'
-timmy = require 'timmy'
-{Database, Profile} = require 'fussy'
+{inspect}   = require 'util'
+Twitter     = require 'ntwitter'
+timmy       = require 'timmy'
+{Database}  = require 'fussy'
 {openGraph} = require './common'
 
-pretty = (obj) -> "#{inspect obj, no, 20, yes}"
-wait = (t) -> (f) -> setTimeout f, t
-P = (x) -> Math.random() < x
-
+pretty = (obj)      -> "#{inspect obj, no, 20, yes}"
+wait   = (t) -> (f) -> setTimeout f, t
+P      = (x)        -> Math.random() < x
 
 database = new Database()
-twit = new Twitter require './credentials'
+twit     = new Twitter require './credentials'
 
 blacklist = [
   "http://instagr.am"
   "http://yfrog.com"
   "http://tmblr.co"
   "http://youtu.be"
+  "https://youtu.be"
   "http://www.youtube."
   "http://fb.me"
+  "https://fb.me"
   "http://www.amazon."
   "http://google."
+  "https://google."
   "http://youtube."
   "http://facebook."
+  "https://facebook."
   "http://twitter."
+  "https://twitter."
   "http://pinterest"
   "http://twitpic."
+  "http://ask.fm"
+  "http://4sq.com"
+  "http://25.media.tumblr.com"
 ]
 
 URLs = []
@@ -33,13 +40,15 @@ URLs = []
 
 # we need to regularly prune the database or else memory will explode  
 do prune = ->
-  console.log "database size: #{@database.size} entires"
-  wait(10.sec) prune
-  return
-  console.log "pruning.."
-  pruned = database.prune 2
-  console.log "pruned #{pruned.keywords} keywords and #{pruned.ngrams} ngrams\n"
-  wait(10.sec) prune
+  console.log "database size: #{database.size} entries"
+  if database.size > 100
+    console.log "pruning.."
+    pruned = database.prune 2
+    console.log "pruned #{pruned.keywords} keywords and #{pruned.ngrams} ngrams\n"
+    wait(30.sec) prune
+  else
+    console.log "no need to prune."
+    wait(5.sec) prune
 
 # do a snapshot of the database every N seconds
 do snapshot = ->
@@ -47,6 +56,7 @@ do snapshot = ->
   console.log "dumping database to file.."
   database.toFile 'dump.json'
   wait(60.sec) snapshot
+
 
 do crawl = ->
   console.log "we have #{URLs.length} urls.."

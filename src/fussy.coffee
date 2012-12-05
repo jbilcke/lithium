@@ -80,6 +80,7 @@ class Database
       for p in prunableKeys
         delete ngrams.keywords[p]
         pruned.keywords += 1
+        @size -= 1
       if Object.keys(ngrams.keywords).length is 0
         prunableKeywords.push ngram
     for p in prunableKeywords
