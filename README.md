@@ -100,6 +100,12 @@ To be continued, see the example
 
 ## Changelog
 
+#### 0.0.1 (Wednesday, December 5, 2012)
+
+ * Added database.prune(threshold)
+ * Added database.toFile(fileName)
+ * Removed the toy twitter database from core
+
 #### 0.0.0
 
  * Initial version, not very documented

@@ -31,6 +31,7 @@ class Database
 
   constructor: (@_={}) ->
     @ngramSize = 3
+    @size = 0
 
   learn: (tagged) =>
     for txt, keywords of tagged
@@ -39,6 +40,7 @@ class Database
           @_[n] = ngram: ngram, keywords: {}
         for key in keywords
           unless key of @_[n].keywords
+            @size += 1
             @_[n].keywords[key] = 0
           @_[n].keywords[key] += 1
     @
@@ -64,8 +66,41 @@ class Database
             keywords[k] += count
       keywords
 
+  # delete connections of weight inferior or equal to a threshold
+  prune: (threshold, onComplete) =>
+    pruned = 
+      keywords: 0
+      ngrams: 0
+    prunableKeywords = []
+    for ngram, ngrams of @_
+      prunableKeys = []
+      for keyword, count of ngrams.keywords
+        if count <= threshold
+          prunableKeys.push keyword
+      for p in prunableKeys
+        delete ngrams.keywords[p]
+        pruned.keywords += 1
+      if Object.keys(ngrams.keywords).length is 0
+        prunableKeywords.push ngram
+    for p in prunableKeywords
+      delete @_[p]
+      pruned.ngrams += 1
+  
+    if onComplete?
+      onComplete pruned
+      return
+    else
+      pruned
 
-  toString: => pretty @_
+
+  toFile: (fileName, onComplete) => 
+    fs.writeFile fileName, @toString(), (err) ->
+      throw err if err
+      console.log 'It\'s saved!'
+      onComplete?()
+
+
+  toString: => JSON.serialize @_
   
 
 class Profile
