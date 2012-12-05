@@ -41,11 +41,11 @@ URLs = []
 # we need to regularly prune the database or else memory will explode  
 do prune = ->
   console.log "database size: #{database.size} entries"
-  if database.size > 100
+  if database.size > 500000
     console.log "pruning.."
-    pruned = database.prune 2
+    pruned = database.prune 1
     console.log "pruned #{pruned.keywords} keywords and #{pruned.ngrams} ngrams\n"
-    wait(30.sec) prune
+    wait(5.sec) prune
   else
     console.log "no need to prune."
     wait(5.sec) prune
@@ -68,7 +68,7 @@ do crawl = ->
   URLs = []
   console.log "testing " + pretty url
   openGraph url, ({description, keywords}) ->
-    if description.length > 3 and keywords.length and keywords[0] isnt ''
+    if description.length > 25 and keywords.length and keywords[0] isnt ''
       # store in the database
       console.log "#{description} --> " + pretty keywords
       database.learn description, keywords
@@ -78,7 +78,9 @@ do crawl = ->
 
 twit.stream 'statuses/sample', (stream) ->
   stream.on 'data', (data) ->
-    return unless data.entities.urls.length and data.user.lang is 'en'
+    return if data.text.length < 25
+    return if data.entities.urls.length is 0
+    return if data.user.lang isnt 'en'
     for url in data.entities.urls
       continue unless url.expanded_url?
       url = url.expanded_url
