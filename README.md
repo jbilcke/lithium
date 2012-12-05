@@ -6,8 +6,7 @@ node-fussy
 
 ## Presentation
 
-Fussy is a minimalist recommendation engine. It filters unwanted noise out of your news streams,
-but not too much: fussy will watch carefully and try to suggest things from time to time.
+Fussy is a minimalist recommendation engine. It filters unwanted noise out of your news streams, but not too much: fussy will watch carefully and try to suggest things from time to time.
 If you change your mind later, fussy will detect it, and adjust your profile a.k.a "filter bubble",
 so that it is not a bubble anymore.
 
@@ -15,9 +14,9 @@ It's sounds like magic, but you can trust fussy. Because you know, he is very pi
 
 ## How it works
 
-Everytime you call profile#learn() this will increment or decrement some weights in the underlying network of tags.
-That's why Fussy can fix profiles back: you can decrement the importance of keywords dynamically,
-hours, days or months after liking them.
+It's based on a basic, naive-bayesian style algorithm:
+Everytime you call profile.learn() this will increment or decrement some weights in the underlying network of tags.
+That's why Fussy can fix profiles back: you can decrement the importance of keywords dynamically, hours, days or months after liking them.
 
 ## Installation
 
@@ -161,6 +160,10 @@ To be continued, see the example
   See the /examples folder.
 
   There is an example crawler.coffee (careful: it needs a few dependencies, but they are on NPM) that show how one could use Twitter to get a "randomly" tagged dataset for free.
+
+## Wishlist
+
+ * unit tests
 
 ## Changelog
 
