@@ -106,7 +106,6 @@ Typically you will want to do this:
 
 ```CoffeeScript
 # we need to regularly prune the database or else memory will explode  
-wait = (t) -> (f) -> setTimeout f, t
 do prune = ->
   # database.size is the number of connections in the underlying network
   console.log "database size: #{database.size} entries"
