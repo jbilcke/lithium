@@ -94,17 +94,83 @@ tagged = database.tag [
 ]
 ```
 
+#### Saving memory
+
+Fussy is a memory hog: since it keeps everything in RAM
+(every single ngram he encounters) you will have to
+clean weaks connections by calling database.prune(threshold)
+
+connections with a weight <= threshold will be removed,
+saving memory.
+
+Typically you will want to do this:
+
+```CoffeeScript
+# we need to regularly prune the database or else memory will explode  
+wait = (t) -> (f) -> setTimeout f, t
+do prune = ->
+  # database.size is the number of connections in the underlying network
+  console.log "database size: #{database.size} entries"
+  if database.size > 500000 # for instance
+    console.log "pruning.."
+    pruned = database.prune 1
+    console.log "pruned #{pruned.keywords} keywords and #{pruned.ngrams} ngrams\n"
+    setTimeout prune, 1000
+  else
+    console.log "no need to prune."
+    setTimeout prune, 5000
+```
+
 ### User recommendation
 
+
+#### Creating a new Profile
+
+```CoffeeScript
+profile = new Profile()
+```
+
+#### Learning from a user preference
+
+We need to save the full text together with the keywords.
+The keywords can be hidden for the end user (he can only see the text if you want),
+but you have to keep in mind that internally Fussy need them 
+to compute its scores.
+
+```CoffeeScript
+profile.learn "there is snow at the train station", ["weather","city","snow","winter"], +1
+profile.learn "it is too hot in the city hall",     ["weather","city","summer","hot"],  -1
+```
+
+#### Recommending a text
+
+```CoffeeScript
+tagged = database.tag [
+  "a brand new movie synopsis with a cool scenario"
+  "a new movie about teletubbies"
+  "martians have been discovered on Mercury! but they are dead"
+]
+recommended = profile.recommend tagged
+```
+
+
 To be continued, see the example
+
+## Examples
+
+  See the /examples folder.
+
+  There is an example crawler.coffee (careful: it needs a few dependencies, but they are on NPM) that show how one could use Twitter to get a "randomly" tagged dataset for free.
 
 ## Changelog
 
 #### 0.0.1 (Wednesday, December 5, 2012)
 
+ * Added database.size
  * Added database.prune(threshold)
  * Added database.toFile(fileName)
  * Removed the toy twitter database from core
+ * Added an example crawler you could use to build a tag database
 
 #### 0.0.0
 
