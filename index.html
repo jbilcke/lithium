@@ -36,8 +36,7 @@
 
 <h2>Presentation</h2>
 
-<p>Fussy is a minimalist recommendation engine. It filters unwanted noise out of your news streams,
-but not too much: fussy will watch carefully and try to suggest things from time to time.
+<p>Fussy is a minimalist recommendation engine. It filters unwanted noise out of your news streams, but not too much: fussy will watch carefully and try to suggest things from time to time.
 If you change your mind later, fussy will detect it, and adjust your profile a.k.a "filter bubble",
 so that it is not a bubble anymore.</p>
 
@@ -45,9 +44,9 @@ so that it is not a bubble anymore.</p>
 
 <h2>How it works</h2>
 
-<p>Everytime you call profile#learn() this will increment or decrement some weights in the underlying network of tags.
-That's why Fussy can fix profiles back: you can decrement the importance of keywords dynamically,
-hours, days or months after liking them.</p>
+<p>It's based on a basic, naive-bayesian style algorithm:
+Everytime you call profile.learn() this will increment or decrement some weights in the underlying network of tags.
+That's why Fussy can fix profiles back: you can decrement the importance of keywords dynamically, hours, days or months after liking them.</p>
 
 <h2>Installation</h2>
 
@@ -122,13 +121,82 @@ hours, days or months after liking them.</p>
 <span class="p">]</span>
 </pre></div>
 
+<h4>Saving memory</h4>
+
+<p>Fussy is a memory hog: since it keeps everything in RAM
+(every single ngram he encounters) you will have to
+clean weaks connections by calling database.prune(threshold)</p>
+
+<p>connections with a weight &lt;= threshold will be removed,
+saving memory.</p>
+
+<p>Typically you will want to do this:</p>
+
+<div class="highlight"><pre><span class="c1"># we need to regularly prune the database or else memory will explode  </span>
+<span class="nx">do</span> <span class="nv">prune = </span><span class="o">-&gt;</span>
+  <span class="c1"># database.size is the number of connections in the underlying network</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="s">"database size: </span><span class="si">#{</span><span class="nx">database</span><span class="p">.</span><span class="nx">size</span><span class="si">}</span><span class="s"> entries"</span>
+  <span class="k">if</span> <span class="nx">database</span><span class="p">.</span><span class="nx">size</span> <span class="o">&gt;</span> <span class="mi">500000</span> <span class="c1"># for instance</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="s">"pruning.."</span>
+    <span class="nv">pruned = </span><span class="nx">database</span><span class="p">.</span><span class="nx">prune</span> <span class="mi">1</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="s">"pruned </span><span class="si">#{</span><span class="nx">pruned</span><span class="p">.</span><span class="nx">keywords</span><span class="si">}</span><span class="s"> keywords and </span><span class="si">#{</span><span class="nx">pruned</span><span class="p">.</span><span class="nx">ngrams</span><span class="si">}</span><span class="s"> ngrams\n"</span>
+    <span class="nx">setTimeout</span> <span class="nx">prune</span><span class="p">,</span> <span class="mi">1000</span>
+  <span class="k">else</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="s">"no need to prune."</span>
+    <span class="nx">setTimeout</span> <span class="nx">prune</span><span class="p">,</span> <span class="mi">5000</span>
+</pre></div>
+
 <h3>User recommendation</h3>
+
+<h4>Creating a new Profile</h4>
+
+<div class="highlight"><pre><span class="nv">profile = </span><span class="k">new</span> <span class="nx">Profile</span><span class="p">()</span>
+</pre></div>
+
+<h4>Learning from a user preference</h4>
+
+<p>We need to save the full text together with the keywords.
+The keywords can be hidden for the end user (he can only see the text if you want),
+but you have to keep in mind that internally Fussy need them 
+to compute its scores.</p>
+
+<div class="highlight"><pre><span class="nx">profile</span><span class="p">.</span><span class="nx">learn</span> <span class="s">"there is snow at the train station"</span><span class="p">,</span> <span class="p">[</span><span class="s">"weather"</span><span class="p">,</span><span class="s">"city"</span><span class="p">,</span><span class="s">"snow"</span><span class="p">,</span><span class="s">"winter"</span><span class="p">],</span> <span class="o">+</span><span class="mi">1</span>
+<span class="nx">profile</span><span class="p">.</span><span class="nx">learn</span> <span class="s">"it is too hot in the city hall"</span><span class="p">,</span>     <span class="p">[</span><span class="s">"weather"</span><span class="p">,</span><span class="s">"city"</span><span class="p">,</span><span class="s">"summer"</span><span class="p">,</span><span class="s">"hot"</span><span class="p">],</span>  <span class="o">-</span><span class="mi">1</span>
+</pre></div>
+
+<h4>Recommending a text</h4>
+
+<div class="highlight"><pre><span class="nv">tagged = </span><span class="nx">database</span><span class="p">.</span><span class="nx">tag</span> <span class="p">[</span>
+  <span class="s">"a brand new movie synopsis with a cool scenario"</span>
+  <span class="s">"a new movie about teletubbies"</span>
+  <span class="s">"martians have been discovered on Mercury! but they are dead"</span>
+<span class="p">]</span>
+<span class="nv">recommended = </span><span class="nx">profile</span><span class="p">.</span><span class="nx">recommend</span> <span class="nx">tagged</span>
+</pre></div>
 
 <p>To be continued, see the example</p>
 
-<h2>Changelog</h2>
+<h2>Examples</h2>
 
-<h4>0.0.0</h4>
+<p>See the /examples folder.</p>
+
+<p>There is an example crawler.coffee (careful: it needs a few dependencies, but they are on NPM) that show how one could use Twitter to get a "randomly" tagged dataset for free.</p>
+
+<h2>Wishlist</h2>
+
+<ul>
+<li>unit tests</li>
+</ul><h2>Changelog</h2>
+
+<h4>0.0.1 (Wednesday, December 5, 2012)</h4>
+
+<ul>
+<li>Added database.size</li>
+<li>Added database.prune(threshold)</li>
+<li>Added database.toFile(fileName)</li>
+<li>Removed the toy twitter database from core</li>
+<li>Added an example crawler you could use to build a tag database</li>
+</ul><h4>0.0.0</h4>
 
 <ul>
 <li>Initial version, not very documented</li>
