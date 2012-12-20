@@ -1,4 +1,5 @@
 {inspect}   = require 'util'
+fs          = require 'fs'
 Twitter     = require 'ntwitter'
 timmy       = require 'timmy'
 {Database}  = require 'fussy'
@@ -47,21 +48,20 @@ do prune = ->
     console.log "pruned #{pruned.keywords} keywords and #{pruned.ngrams} ngrams\n"
     wait(5.sec) prune
   else
-    console.log "no need to prune."
+    #console.log "no need to prune."
     wait(5.sec) prune
 
 # do a snapshot of the database every N seconds
 do snapshot = ->
-  return
   console.log "dumping database to file.."
   database.toFile 'dump.json'
-  wait(60.sec) snapshot
+  wait(20.sec) snapshot
 
 
 do crawl = ->
-  console.log "we have #{URLs.length} urls.."
+  #console.log "we have #{URLs.length} urls.."
   if URLs.length is 0
-    wait(1.sec) crawl
+    wait(300) crawl
     return
   # for now we can only process one url at the time
   url = URLs[0]

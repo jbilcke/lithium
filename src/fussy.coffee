@@ -1,5 +1,6 @@
 {inspect} = require 'util'
-deck = require 'deck'
+fs        = require 'fs'
+deck      = require 'deck'
 
 pretty = (obj) -> "#{inspect obj, no, 20, yes}"
 wait = (t) -> (f) -> setTimeout f, t
@@ -33,9 +34,15 @@ class Database
     @ngramSize = 3
     @size = 0
 
-  learn: (tagged) =>
+  learn: (tagged, b) =>
+    if b?
+      _tagged = {}
+      _tagged["#{tagged}"] = b
+      tagged = _tagged
+
     for txt, keywords of tagged
       for n, ngram of ngramize txt, @ngramSize
+        #console.log "n: #{n}, ngram: #{ngram}"
         unless n of @_
           @_[n] = ngram: ngram, keywords: {}
         for key in keywords
@@ -101,7 +108,7 @@ class Database
       onComplete?()
 
 
-  toString: => JSON.serialize @_
+  toString: => JSON.stringify @_, null, 2
   
 
 class Profile
