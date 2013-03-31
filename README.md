@@ -63,18 +63,33 @@ Because, you know, he’s very picky.
    Whenever we have a new tagged sentence, we can submit the text to the user (it doesn't matter if he knows the tags or not. they can be hidden),
    and then  we can expect (it's asynchronous; he may reply or not) an answer like:
    
-   +1 (like/more)
-   0 (skip/unknow)
-   -1 (dislike/less)
+   * +1 (like/more)
+   * 0 (skip/unknow)
+   * -1 (dislike/less)
    
-   This is the score for the sentence he submitted to us, but since we know the tags, this score will be used to update the tags's score as well, in its user profile.
+   This is the feeling of the user toward the text. 
+   Fussy uses a ternary system, but you could imagine something more accurat, with sliders/range,
+    allowing in-between values like "a bit more" (+0.5) etc..
+
+   Now, this single score will then be used to update the score of every other tags in the user profile,
+   just by adding the score to them.
+   
+   This is why Fussy is dynamic: 
+   Let's say you fancy hipster things, and +1 articles containing the h-word.
+   If later you keep "-1" articles containing the word "hipster",
+   but continue to +1 all others, after a moment the word hipster will have a low score,
+   and when the recommendation phase sort and filter out sentences, hipster-related content
+   will have a low scoe.
+   (since score are used for relative and not absolute comparison, the score does not have to be near zero or negative to be effective)
    
 
 ### Phase 4 - Recommendation
 
   TO BE CONTINUED LATER
   
- 
+  but basically, we do the previous steps in the reverse order, to compute a "user-related" score for a sentence,
+  which can then be used for cool things, like filtering tweets, articles, literally, or in a more subtle way (personally, I prefer to use the score as a parameter of a probability function,
+  so this way there is some chance that articles I didn't "like" still get into my timeline, unless I really marked them as "bad")
 
 ## Installation
 
