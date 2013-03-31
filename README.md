@@ -27,23 +27,44 @@ Because, you know, he’s very picky.
       "another sentence": [ "other", "tag" ] 
     }
   
+  For instance:
+  
+    
+    { 
+      "beer brew": [ "beverage", "stuff" ], 
+      "home brew": [ "mac", "stuff" ] 
+    }
+  
+  
   The algorithm will read each sentence, split it into n-grams,
   then for each ngram we will "bind" it with a tag from the list.
   
   for instance here, we will get, in the end:
   
-     "sentence":
-         "tag" : 2
-         "other": 1
+     "beer":
+         "stuff": 1
+         "beverage": 1
          
-     "another":
-         "tag": 1
-         "other": 1
+     "brew":
+         "stuff": 2
+         "mac": 1
+         "beverage": 1
+             
+     "home":
+         "mac": 1
+         "stuff": 1
     
-    "another sentence":
-        "tag": 1
-        "other": 1
+    "beer brew":
+        "stuff": 1
+        "beverage": 1
         
+    "home brew":
+        "stuff": 1
+        "mac": 1
+        
+  N-grams allow the system to catch complex associations (the immediate context), such as word that have double meaning depending on the words before and after them.
+ 
+  
 ### Phase 2 - Tagging
 
    Using the data structure previously generated,
