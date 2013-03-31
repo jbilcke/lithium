@@ -16,14 +16,65 @@ It sounds like magic! But you can trust Fussy.
 Because, you know, he’s very picky.
 
 
-## How it works
+## Detailed algorithm
+  
+### Phase 1 - learning
+  
+  In the learning phase, we take a list of tagged sentences, in the form:
+  
+    { 
+      "sentence": [ "tag" ], 
+      "another sentence": [ "other", "tag" ] 
+    }
+  
+  The algorithm will read each sentence, split it into n-grams,
+  then for each ngram we will "bind" it with a tag from the list.
+  
+  for instance here, we will get, in the end:
+  
+     "sentence":
+         "tag" : 2
+         "other": 1
+         
+     "another":
+         "tag": 1
+         "other": 1
+    
+    "another sentence":
+        "tag": 1
+        "other": 1
+        
+### Phase 2 - Tagging
 
-It’s based on a basic, naïve-bayesian style algorithm.
-Everytime you call `profile.learn()`, Fussy increments or decrements weights in the underlying network of tags.
-That’s how Fussy unlearns things if you change your mind. 
-You can always decrement the importance of keywords dynamically. 
-Even hours, days, or months after liking them.
+   Using the data structure previously generated,
+   it is then easy to tag a new, never seen before sentence, using the reverse process:
+   
+   we split the new sentence into n-grams, then we lookup these ngrams in the database, to extract all the related tags,
+   and compute a score for each of them. 
+   
+   In node-fussy, this is done in-memory, but this could be done in any key-value store.
+   
+### Phase 3 - Recording user preferences
+  
+   Actually, this part is not magic at all:
+   
+   Each user has a "profile", which is just a map of tags with attached preference scores.
 
+   Whenever we have a new tagged sentence, we can submit the text to the user (it doesn't matter if he knows the tags or not. they can be hidden),
+   and then  we can expect (it's asynchronous; he may reply or not) an answer like:
+   
+   +1 (like/more)
+   0 (skip/unknow)
+   -1 (dislike/less)
+   
+   This is the score for the sentence he submitted to us, but since we know the tags, this score will be used to update the tags's score as well, in its user profile.
+   
+
+### Phase 4 - Recommendation
+
+  TO BE CONTINUED LATER
+  
+ 
 
 ## Installation
 
