@@ -1,9 +1,13 @@
+# STANDARD NODE LIBRARY MODULES
 {inspect} = require 'util'
 fs        = require 'fs'
+
+# THIRD PARTIES MODULES
 deck      = require 'deck'
 
-pretty = (obj) -> "#{inspect obj, no, 20, yes}"
-wait = (t) -> (f) -> setTimeout f, t
+# HELPERS
+pretty = (obj) -> "#{inspect obj, no, 20, yes}" # prettify an object to colorful string
+wait = (t) -> (f) -> setTimeout f, t            # just an alias to setTimeout
 
 
 #################################
@@ -28,18 +32,31 @@ ngramize = (words, n) ->
   grams
 
 
+###
+
+
+###
 class Database
 
   constructor: (@_={}) ->
-    @ngramSize = 3
+    @ngramSize = 3 # we will generate tuples of 1, 2 and 3 words
     @size = 0
 
-  learn: (tagged, b) =>
-    if b?
+  ###
+  usage:
+     learn { "sentence" : [ tags, .. ] }
+     
+     learn "sentence, [ tags, .. ]
+  ###
+  learn: (tagged, value) =>
+    
+    # learn "sentence, [ tags, .. ]
+    if value?
       _tagged = {}
-      _tagged["#{tagged}"] = b
+      _tagged["#{tagged}"] = value
       tagged = _tagged
 
+    # learn { "sentence" : [ tags, .. ] }
     for txt, keywords of tagged
       for n, ngram of ngramize txt, @ngramSize
         #console.log "n: #{n}, ngram: #{ngram}"
@@ -73,7 +90,11 @@ class Database
             keywords[k] += count
       keywords
 
-  # delete connections of weight inferior or equal to a threshold
+  ###
+
+  we need to delete connections of weight inferior or equal to a threshold
+  
+  ###
   prune: (threshold, onComplete) =>
     pruned = 
       keywords: 0
