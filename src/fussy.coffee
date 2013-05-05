@@ -2,8 +2,9 @@
 fs        = require 'fs'
 deck      = require 'deck'
 
-pretty = (obj) -> "#{inspect obj, no, 20, yes}"
-wait = (t) -> (f) -> setTimeout f, t
+isString  = (obj) -> !!(obj is '' or (obj and obj.charCodeAt and obj.substr))
+pretty    = (obj) -> "#{inspect obj, no, 20, yes}"
+wait      = (t) -> (f) -> setTimeout f, t
 
 
 #################################
@@ -30,9 +31,25 @@ ngramize = (words, n) ->
 
 class Database
 
-  constructor: (@_={}) ->
+  constructor: (input) ->
+    @_={}
+    if input?
+      if isString input
+        rawData = "{}"
+        try
+          rawData = fs.readFileSync input
+          console.log "loaded file #{input}"
+        catch e
+          console.log "couldn't read input file, will create a new one"
+        @_ = JSON.parse "#{rawData}"
+        #console.log "parsed data #{rawData}"
+
+      else
+        @_ = input
+
     @ngramSize = 3
-    @size = 0
+    @length = Object.keys(@_).length
+    @size = rawData.length
 
   learn: (tagged, b) =>
     if b?
@@ -47,10 +64,11 @@ class Database
           @_[n] = ngram: ngram, keywords: {}
         for key in keywords
           unless key of @_[n].keywords
-            @size += 1
             @_[n].keywords[key] = 0
           @_[n].keywords[key] += 1
+    @length = Object.keys(@_).length
     @
+
 
   ##################################################
   # AUTOMATIC KEYWORD TAGGING OF A LIST OF STRINGS #
@@ -74,7 +92,7 @@ class Database
       keywords
 
   # delete connections of weight inferior or equal to a threshold
-  prune: (threshold, onComplete) =>
+  prune: (filter, onComplete) =>
     pruned = 
       keywords: 0
       ngrams: 0
@@ -82,17 +100,17 @@ class Database
     for ngram, ngrams of @_
       prunableKeys = []
       for keyword, count of ngrams.keywords
-        if count <= threshold
+        if filter { keyword, count }
           prunableKeys.push keyword
       for p in prunableKeys
         delete ngrams.keywords[p]
         pruned.keywords += 1
-        @size -= 1
       if Object.keys(ngrams.keywords).length is 0
         prunableKeywords.push ngram
     for p in prunableKeywords
       delete @_[p]
       pruned.ngrams += 1
+    @length = Object.keys(@_).length
   
     if onComplete?
       onComplete pruned
@@ -102,13 +120,16 @@ class Database
 
 
   toFile: (fileName, onComplete) => 
-    fs.writeFile fileName, @toString(), (err) ->
+    fs.writeFile fileName, "#{@}", (err) ->
       throw err if err
       console.log 'It\'s saved!'
       onComplete?()
 
 
-  toString: => JSON.stringify @_, null, 2
+  toString: => 
+    dump = JSON.stringify @_, null, 2
+    @size = dump.length
+    dump
   
 
 class Profile
