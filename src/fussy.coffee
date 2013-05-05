@@ -1,9 +1,17 @@
+# STANDARD NODE LIBRARY MODULES
 {inspect} = require 'util'
 fs        = require 'fs'
+
+# THIRD PARTIES MODULES
 deck      = require 'deck'
 
+# check if an object is a String
 isString  = (obj) -> !!(obj is '' or (obj and obj.charCodeAt and obj.substr))
+
+# output a pretty string representation of an object
 pretty    = (obj) -> "#{inspect obj, no, 20, yes}"
+
+# just an alias to set timeout
 wait      = (t) -> (f) -> setTimeout f, t
 
 
@@ -29,6 +37,10 @@ ngramize = (words, n) ->
   grams
 
 
+###
+
+
+###
 class Database
 
   constructor: (input) ->
@@ -47,16 +59,26 @@ class Database
       else
         @_ = input
 
+    # we will generate tuples / n-grams of 1, 2 and 3 words
     @ngramSize = 3
     @length = Object.keys(@_).length
     @size = rawData.length
 
-  learn: (tagged, b) =>
-    if b?
+  ###
+  usage:
+     learn { "sentence" : [ tags, .. ] }
+     
+     learn "sentence, [ tags, .. ]
+  ###
+  learn: (tagged, value) =>
+    
+    # learn "sentence, [ tags, .. ]
+    if value?
       _tagged = {}
-      _tagged["#{tagged}"] = b
+      _tagged["#{tagged}"] = value
       tagged = _tagged
 
+    # learn { "sentence" : [ tags, .. ] }
     for txt, keywords of tagged
       for n, ngram of ngramize txt, @ngramSize
         #console.log "n: #{n}, ngram: #{ngram}"
@@ -91,8 +113,14 @@ class Database
             keywords[k] += count
       keywords
 
-  # delete connections of weight inferior or equal to a threshold
-  prune: (filter, onComplete) =>
+
+  ###
+
+  we need to delete connections of weight inferior or equal to a threshold
+  
+  ###
+  prune: (threshold, onComplete) =>
+
     pruned = 
       keywords: 0
       ngrams: 0

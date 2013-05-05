@@ -1,26 +1,120 @@
-
 node-fussy
 ==========
 
-*A recommendation engine that care about user actions*
+*The recommendation engine that care about your actions*
 
 ## Presentation
 
-Fussy is a minimalist recommendation engine. It filters unwanted noise out of your news streams, but not too much: fussy will watch carefully and try to suggest things from time to time.
-If you change your mind later, fussy will detect it, and adjust your profile a.k.a "filter bubble",
-so that it is not a bubble anymore.
+Fussy is a minimalist recommendation engine. 
+It filters unwanted noise out of your news streams—but not too much! 
+Fussy will watch carefully, and suggest things from time to time.
+If you change your mind later, Fussy will notice, and adjust your profile. 
+That way, Fussy keeps up-to-date with the ever-changing you.
 
-It's sounds like magic, but you can trust fussy. Because you know, he is very picky.
+It sounds like magic! But you can trust Fussy. 
 
-## How it works
+Because, you know, he’s very picky.
 
-It's based on a basic, naive-bayesian style algorithm:
-Everytime you call profile.learn() this will increment or decrement some weights in the underlying network of tags.
-That's why Fussy can fix profiles back: you can decrement the importance of keywords dynamically, hours, days or months after liking them.
+
+## Detailed algorithm
+  
+### Phase 1 - learning
+  
+  In the learning phase, we take a list of tagged sentences, in the form:
+  
+    { 
+      "sentence": [ "tag" ], 
+      "another sentence": [ "other", "tag" ] 
+    }
+  
+  For instance:
+  
+    
+    { 
+      "beer brew": [ "beverage", "stuff" ], 
+      "home brew": [ "mac", "stuff" ] 
+    }
+  
+  
+  The algorithm will read each sentence, split it into n-grams,
+  then for each ngram we will "bind" it with a tag from the list.
+  
+  for instance here, we will get, in the end:
+  
+     "beer":
+         "stuff": 1
+         "beverage": 1
+         
+     "brew":
+         "stuff": 2
+         "mac": 1
+         "beverage": 1
+             
+     "home":
+         "mac": 1
+         "stuff": 1
+    
+    "beer brew":
+        "stuff": 1
+        "beverage": 1
+        
+    "home brew":
+        "stuff": 1
+        "mac": 1
+        
+  N-grams allow the system to catch complex associations (the immediate context), such as word that have double meaning depending on the words before and after them.
+ 
+  
+### Phase 2 - Tagging
+
+   Using the data structure previously generated,
+   it is then easy to tag a new, never seen before sentence, using the reverse process:
+   
+   we split the new sentence into n-grams, then we lookup these ngrams in the database, to extract all the related tags,
+   and compute a score for each of them. 
+   
+   In node-fussy, this is done in-memory, but this could be done in any key-value store.
+   
+### Phase 3 - Recording user preferences
+  
+
+  Each user has a "profile", which is just a map of tags with attached preference scores.
+
+  Whenever we have a new tagged sentence, we can submit the text to the user (it doesn't matter if he knows the tags or not. they can be hidden),
+  and then  we can expect (it's asynchronous; he may reply or not) an answer like:
+   
+   * +1 (like/more)
+   * 0 (skip/unknow)
+   * -1 (dislike/less)
+   
+This is the feeling of the user toward the text. 
+Fussy uses a ternary system, but you could imagine something more accurat, with sliders/range,
+allowing in-between values like "a bit more" (+0.5) etc..
+
+Now, this single score will then be used to update the score of every other tags in the user profile,
+just by adding the score to them.
+   
+This is why Fussy is dynamic: 
+Let's say you fancy hipster things, and +1 articles containing the h-word.
+If later you keep "-1" articles containing the word "hipster",
+but continue to +1 all others, after a moment the word hipster will have a low score,
+and when the recommendation phase sort and filter out sentences, hipster-related content
+will have a low score.
+(since score are used for relative and not absolute comparison, the score does not have to be near zero or negative to be effective)
+   
+
+### Phase 4 - Recommendation
+
+  TO BE CONTINUED LATER
+  
+  but basically, we do the previous steps in the reverse order, to compute a "user-related" score for a sentence,
+  which can then be used for cool things, like filtering tweets, articles, literally, or in a more subtle way (personally, I prefer to use the score as a parameter of a probability function,
+  so this way there is some chance that articles I didn't "like" still get into my timeline, unless I really marked them as "bad")
 
 ## Installation
 
     $ npm install fussy
+
 
 ## Demo
 
@@ -59,7 +153,7 @@ for txt, keywords of training
 # news to sort / rate
 news = database.tag [
   "Open source conference give free beer to first 50 people in NY"
-  "What is in people's head? an in-depth data analysis"
+  "What is in people’s head? an in-depth data analysis"
 ]
 recommendations = profile.recommend news
 console.log "--> #{Object.keys recommendations}"
@@ -95,17 +189,16 @@ tagged = database.tag [
 
 #### Saving memory
 
-Fussy is a memory hog: since it keeps everything in RAM
-(every single ngram he encounters) you will have to
-clean weaks connections by calling database.prune(threshold)
+Fussy is a memory hog. Since it keeps everything in RAM (every single 
+`ngram` it encounters), you’ll have to clean weak connections.
 
-connections with a weight <= threshold will be removed,
-saving memory.
+Fortunately, it’s really simple: just call `database.prune(threshold)`.
+Connections whose `weight <= threshold` are removed, reclaiming memory.
 
-Typically you will want to do this:
+Typically you’ll want to do this:
 
 ```CoffeeScript
-# we need to regularly prune the database or else memory will explode  
+# regularly prune the database (or else memory will explode)
 do prune = ->
   # database.size is the number of connections in the underlying network
   console.log "database size: #{database.size} entries"
@@ -119,6 +212,7 @@ do prune = ->
     setTimeout prune, 5000
 ```
 
+
 ### User recommendation
 
 
@@ -128,12 +222,11 @@ do prune = ->
 profile = new Profile()
 ```
 
-#### Learning from a user preference
+#### Learning User Preference
 
-We need to save the full text together with the keywords.
-The keywords can be hidden for the end user (he can only see the text if you want),
-but you have to keep in mind that internally Fussy need them 
-to compute its scores.
+Be sure to save the full text along with the keywords.
+You can have Fussy hide the keywords from the end user, if you want;
+but Fussy needs them internally to compute scores.
 
 ```CoffeeScript
 profile.learn "there is snow at the train station", ["weather","city","snow","winter"], +1
@@ -151,14 +244,14 @@ tagged = database.tag [
 recommended = profile.recommend tagged
 ```
 
+(To be continued…)
 
-To be continued, see the example
 
 ## Examples
 
-  See the /examples folder.
+  (See the `/examples` folder.)
 
-  There is an example crawler.coffee (careful: it needs a few dependencies, but they are on NPM) that show how one could use Twitter to get a "randomly" tagged dataset for free.
+  The example `crawler.coffee` that show how one could use Twitter to get a "randomly" tagged dataset for free. (Notice: this example has a few dependencies. But, they’re all on NPM.)
 
 ## Wishlist
 
@@ -168,10 +261,10 @@ To be continued, see the example
 
 #### 0.0.1 (Wednesday, December 5, 2012)
 
- * Added database.size
- * Added database.prune(threshold)
- * Added database.toFile(fileName)
- * Removed the toy twitter database from core
+ * Added `database.size`
+ * Added `database.prune(threshold)`
+ * Added `database.toFile(fileName)`
+ * Removed the toy Twitter database from core
  * Added an example crawler you could use to build a tag database
 
 #### 0.0.0
