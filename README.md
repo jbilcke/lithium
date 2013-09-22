@@ -5,11 +5,13 @@ node-fussy
 
 NOTE: I'm not an English native, so feel free to open issues if you see typos and bad grammar
 
+## Summary
+
+[![NPM](https://nodei.co/npm/fussy.png?downloads=true&stars=true)](https://nodei.co/npm/fussy/)
+
 ## Usage
 
-### Installation
-
-    $ npm install https://github.com/jbilcke/node-fussy --save
+You can see the examples/ dir, or:
 
 ### Basic demo
 
