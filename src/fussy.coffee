@@ -1,15 +1,13 @@
-{pretty, isString, isNumber, after} = require('petri').common
+
 thesaurus = require 'thesaurus'
 
-log = console.log 
-
+debug = ->
 
 enrich = (words) ->
   moreWords = []
   for word in words
     for anotherWord in thesaurus.find word
       moreWords.push anotherWord unless anotherWord in moreWords
-  #log "words: " + pretty moreWords
   moreWords
 
 POSITIVE = exports.POSITIVE = +1
@@ -41,22 +39,24 @@ class exports.Engine
   constructor: (opts={}) ->
     @stringSize = opts.stringSize ? [0, 30]
     @ngramsSize = opts.ngramsSize ? 2
+    @debug      = opts.debug ? no
+    debug = if debug then console.log else ->
     @profiles = {}
 
   pushEvent: (event) ->
 
     if event.signal is NEUTRAL
-      log "signal is neutral, ignoring"
+      debug "signal is neutral, ignoring"
       return
 
     # analyze the content
     if !@profiles[event.profile]?
-      log "creating profile for #{event.profile}"
+      debug "creating profile for #{event.profile}"
       @profiles[event.profile] = {}
 
     profile = @profiles[event.profile]
 
-    log "updating profile #{event.profile}.."
+    debug "updating profile #{event.profile}.."
 
     # pretty straightfoward
     changed = content: 0, synonyms: 0
@@ -79,7 +79,7 @@ class exports.Engine
         profile[facet] = event.signal + (profile[facet] ? 0)
         changed.synonyms++
 
-    log "#{if event.signal > 0 then 'reinforced' else 'weakened'} #{pretty changed} facets"
+    debug "#{if event.signal > 0 then 'reinforced' else 'weakened'} #{JSON.stringify changed} facets"
 
   # lighten the database, removing weak connections (neither strongly positive or negative)
   prune: (min, max) ->
