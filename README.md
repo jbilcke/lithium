@@ -51,14 +51,14 @@ console.log(JSON.stringify(engine.profiles))
 ## Algorithm
 
 1. The user evaluates an object (eg. a tweet, a song, an ad..) by giving a score.
-This score is typically +1 for a positive evaluation (eg. a like, a click on an ad, or when he buy a product),
+This score is typically +1 for a positive evaluation (eg. a like, a click on an ad, or when he buys a product),
 but it can also be -1, for negative evaluation (eg. dislike, product removed from the cart, ad marked as irrelevant)
 
-2. This score is sent together with a content to the recommendation engine. For the moment the content *must* be a plain english text string (this can be a wikipedia page, an ontology, a list of keywords.. anything that are relevant, with some meaning).
+2. This score is sent together with a content to the recommendation engine. For the moment the content *must* be a plain english text string (this can be a wikipedia page, an ontology, a list of keywords.. anything relevant, with some meaning).
 
-3. The engine extracts patterns of concepts (n-grams), and reinforce or weaken the connections between these concepts, depending on the evaluation given by the user.
+3. The engine extracts patterns of concepts (n-grams), and will reinforce (or weaken) connections between these concepts, depending on the evaluation given by the user.
 
-4. The engine also try to detect weak relationships between concepts, by injecting synonyms from a thesaurus of the English language. It is nice because it can create hidden links between objects very quickly (eg. "dog picture" will be weakly connected to "wolf video")
+4. The engine also try to detect weak relationships between concepts, by injecting synonyms from a thesaurus of the English language. It is nice because it can create hidden links between objects very quickly (eg. "dog picture" will be weakly connected to "wolf video", even if we never display a "dog video" or a "wolf picture" to the user)
 
 
 ## Features
