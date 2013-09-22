@@ -65,7 +65,7 @@ but it can also be -1, for negative evaluation (eg. dislike, product removed fro
 
 ### Efficient
 
-Even if data is scarce, the injection of external relationships make it possible to work on a few events (eg. less than 10). It won't be perfect, it will still perform better than with no data at all.
+Even if data is scarce, the injection of external relationships make it possible to work on a few events (eg. less than 10). It won't be perfect, but it should still perform better than with no data at all.
 
 ### Self-regulating
 
@@ -73,18 +73,18 @@ The network can change over time. New connections can be created, old ones can b
 
 ### More or less customizable
 
-You are not limited to -1 or +1, you can use any value. For instance if the user like a product, that could be a +1, and if he buy it, a +5. This is up to you, you should do AB testing or other research to tweak this.
+You are not limited to -1 or +1, you can use any value. For instance if the user likes a product, that could be a +1, and if he buys it, a +5. This is up to you, you should do AB testing or other research to tweak this.
 Just remember that a signal value of 0 will have no effect, because it represents the non-action (eg. the user just ignore the ad, or skip a product evaluation). If you want to force a link to be weakened (eg. automatically, after a few days or weeks) you have to use a negative value.
 
 ## Known issues
 
- * It would work better with a filter for the most common (and thus irrelevant) keywords. Than can be implemented used some kind of TF-IDF-like algorithm, but I've just not done it yet.
+ * It would work better with a filter for the most common (and thus irrelevant) keywords. Than can be implemented using some kind of TF-IDF-like algorithm, but I've just not done it yet.
 
- * Injecting additional, weak connections is powerful, but using a thesaurus is still a bit limited. It would work even better with link data from DBpedia's ontology, or other semantic graph databases.
+ * Injecting additional, weak connections is powerful, but using a thesaurus is still a bit limited. It would work even better with network data from DBpedia's ontology, or other semantic graph databases.
 
- * The memory usage can be a problem, because a lot of data is stored per-user. You will eventually need to purge manaully the network from time to time, in order to remove the weakest/old links. That could be automatic, but it depends on how much memory you can use, so it won't be easy to implement this kind of GC.
+ * The memory usage can be a problem, because a lot of data is stored per-user. You will eventually need to purge the network from time to time, in order to remove the weakest/old links. That could be automatic, but it depends on how much memory you can use, so it won't be easy to implement this kind of GC.
 
- * The profile networks are not easily human-readable. They are made by and for the machine. But you could try to export them to visualize the graph in Gephi or Sigma.js. That could be interesting
+ * The profile networks are not easily human-readable. They are made by and for the machine. But you could try to export them to visualize the graph in Gephi for instance.
 
 
 ## TODO
