@@ -1,23 +1,24 @@
 {
   "name": "fussy",
-  "description": "A recommendation engine that cares about user actions",
-  "version": "0.0.1",
+  "description": "javascript recommendation engine",
+  "version": "0.0.2",
   "author": "Julian Bilcke <julian.bilcke@daizoru.com>",
   "scripts"     : {
     "test"      : "node_modules/mocha/bin/mocha --bail --require chai --compilers coffee:coffee-script test/*.coffee",
-    "build"     : "node_modules/coffee-script/bin/coffee --compile --output lib/ src/",
-    "watch"     : "node_modules/coffee-script/bin/coffee --watch --compile --output lib/ src/"
+    "build"     : "coffee --compile --output lib/ src/",
+    "watch"     : "coffee --watch --compile --output lib/ src/"
   },
   "main" : "./lib/fussy",
   "repository": "http://github.com/jbilcke/node-fussy.git",
   "keywords": [
     "recommendation system",
     "recommendation engine",
-    "machine learning"
+    "machine learning",
+    "deep learning"
   ],
   "license": "BSD",
   "dependencies": {
-    "deck" : "0.0.4"
+    "thesaurus": "0.0.0"
   },
   "devDependencies" : {
      "coffee-script"  : "1.4.0",

@@ -1,263 +1,102 @@
 node-fussy
 ==========
 
-*The recommendation engine that care about your actions*
+*javascript recommendation engine*
 
-## Presentation
+NOTE: I'm not an English native, so feel free to open issues if you see typos and bad grammar
 
-Fussy is a minimalist recommendation engine. 
-It filters unwanted noise out of your news streams—but not too much! 
-Fussy will watch carefully, and suggest things from time to time.
-If you change your mind later, Fussy will notice, and adjust your profile. 
-That way, Fussy keeps up-to-date with the ever-changing you.
+## Usage
 
-It sounds like magic! But you can trust Fussy. 
+### Installation
 
-Because, you know, he’s very picky.
+    $ npm install --save
 
+### Basic demo
 
-## Detailed algorithm
-  
-### Phase 1 - learning
-  
-  In the learning phase, we take a list of tagged sentences, in the form:
-  
-    { 
-      "sentence": [ "tag" ], 
-      "another sentence": [ "other", "tag" ] 
-    }
-  
-  For instance:
-  
-    
-    { 
-      "beer brew": [ "beverage", "stuff" ], 
-      "home brew": [ "mac", "stuff" ] 
-    }
-  
-  
-  The algorithm will read each sentence, split it into n-grams,
-  then for each ngram we will "bind" it with a tag from the list.
-  
-  for instance here, we will get, in the end:
-  
-     "beer":
-         "stuff": 1
-         "beverage": 1
-         
-     "brew":
-         "stuff": 2
-         "mac": 1
-         "beverage": 1
-             
-     "home":
-         "mac": 1
-         "stuff": 1
-    
-    "beer brew":
-        "stuff": 1
-        "beverage": 1
-        
-    "home brew":
-        "stuff": 1
-        "mac": 1
-        
-  N-grams allow the system to catch complex associations (the immediate context), such as word that have double meaning depending on the words before and after them.
- 
-  
-### Phase 2 - Tagging
+```Javascript
+var fussy = require('fussy');
+var events = [
+  {
+    user: 'test_user', // a unique ID to identify a user
+    content: "a video advertisement about an upcoming movie featuring pirates",
+    signal: fussy.POSITIVE
+  }, {
+    user: 'test_user',
+    content: "a youtube ad about hackers",
+    signal: fussy.POSITIVE
+  }, {
+    user: 'test_user',
+    content: "a facebook ad selling cloud hosting",
+    signal: fussy.POSITIVE
+  }, {
+    user: 'test_user',
+    content: "a video advertisement featuring video games",
+    signal: fussy.NEGATIVE
+  }, {
+    user: 'test_user',
+    content: "a facebook ad about video games",
+    signal: fussy.NEGATIVE
+  }
+];
 
-   Using the data structure previously generated,
-   it is then easy to tag a new, never seen before sentence, using the reverse process:
-   
-   we split the new sentence into n-grams, then we lookup these ngrams in the database, to extract all the related tags,
-   and compute a score for each of them. 
-   
-   In node-fussy, this is done in-memory, but this could be done in any key-value store.
-   
-### Phase 3 - Recording user preferences
-  
+var engine = new fussy.Engine();
 
-  Each user has a "profile", which is just a map of tags with attached preference scores.
+for (var i=0 ; i < events.length ; i++) {
+  engine.pushEvent(events[i]);
+}
 
-  Whenever we have a new tagged sentence, we can submit the text to the user (it doesn't matter if he knows the tags or not. they can be hidden),
-  and then  we can expect (it's asynchronous; he may reply or not) an answer like:
-   
-   * +1 (like/more)
-   * 0 (skip/unknow)
-   * -1 (dislike/less)
-   
-This is the feeling of the user toward the text. 
-Fussy uses a ternary system, but you could imagine something more accurat, with sliders/range,
-allowing in-between values like "a bit more" (+0.5) etc..
-
-Now, this single score will then be used to update the score of every other tags in the user profile,
-just by adding the score to them.
-   
-This is why Fussy is dynamic: 
-Let's say you fancy hipster things, and +1 articles containing the h-word.
-If later you keep "-1" articles containing the word "hipster",
-but continue to +1 all others, after a moment the word hipster will have a low score,
-and when the recommendation phase sort and filter out sentences, hipster-related content
-will have a low score.
-(since score are used for relative and not absolute comparison, the score does not have to be near zero or negative to be effective)
-   
-
-### Phase 4 - Recommendation
-
-  TO BE CONTINUED LATER
-  
-  but basically, we do the previous steps in the reverse order, to compute a "user-related" score for a sentence,
-  which can then be used for cool things, like filtering tweets, articles, literally, or in a more subtle way (personally, I prefer to use the score as a parameter of a probability function,
-  so this way there is some chance that articles I didn't "like" still get into my timeline, unless I really marked them as "bad")
-
-## Installation
-
-    $ npm install fussy
-
-
-## Demo
-
-```CoffeeScript
-{Database, Profile} = require 'fussy'
-database = new Database()
-database.learn
-  "Twitter to sue Google over twitter stream monetization": ["Technology", "Twitter", "Google", "Internet"]
-  "A new library open in the east center in NYC": ["city","library","nyc"]
-  "Rumors: Apple to launch a new tablet for emerging markets": ["Technology", "Apple", "Rumor"]
-  "Microsoft reveal its new data center": ["Technology", "Rumor", "Microsoft"]
-  "An energy-friendly data center for emerging countries": ["Technology", "World", "Energy"]
-  "History of the countries: world music festival at the museum": ["Music", "City","Culture"]
-  "Visiting a museum is good for health": ["Health", "Culture"]
-  "Using home brew to install appplications on your Apple macbook": ["Computers", "Software", "Apple"]
-  "How to brew your own beer": ["DIY", "Fooding", "Beverages", "Beer"]
-  "Facebook to reveal a new open source library": ["Opensource","Technology","Facebook","Social Networks"]
-
-profile = new Profile()
-
-# news to ask the user for like/dislike
-training = database.tag [
-  "Visit the NYC museum using your tablet"
-  "How to brew your own coffee"
-  "Google to launch a new museum app"
-  "Apple to sue Microsoft"
-]
-
-for txt, keywords of training
-
-  # +1: like, 0: indifference, -1: dislike 
-  choice = 1
-
-  profile.learn txt, keywords, choice
-
-# news to sort / rate
-news = database.tag [
-  "Open source conference give free beer to first 50 people in NY"
-  "What is in people’s head? an in-depth data analysis"
-]
-recommendations = profile.recommend news
-console.log "--> #{Object.keys recommendations}"
+console.log(JSON.stringify(engine.profiles))
 ```
 
-## Documentation
+## Algorithm
 
-### Automatic text tagging
+1. The user evaluates an object (eg. a tweet, a song, an ad..) by giving a score.
+This score is typically +1 for a positive evaluation (eg. a like, a click on an ad, or when he buy a product),
+but it can also be -1, for negative evaluation (eg. dislike, product removed from the cart, ad marked as irrelevant)
 
-Fussy has a built-in text tagger. 
+2. This score is sent together with a content to the recommendation engine. For the moment the content *must* be a plain english text string (this can be a wikipedia page, an ontology, a list of keywords.. anything that are relevant, with some meaning).
 
-#### Learning tags
+3. The engine extracts patterns of concepts (n-grams), and reinforce or weaken the connections between these concepts, depending on the evaluation given by the user.
 
-Fussy need to learn tags from an existing dataset: 
-
-```CoffeeScript
-fussy = require 'fussy'
-database = new fussy.Database()
-database.learn
-  "a short test text": ["keyword one", "keyword two"]
-  "a second text": ["keyword one", "a new keyword"]
-```
-
-#### Tagging words
-
-Then you can use it to tag text:
-
-```CoffeeScript
-tagged = database.tag [
-  " a second test"
-]
-```
-
-#### Saving memory
-
-Fussy is a memory hog. Since it keeps everything in RAM (every single 
-`ngram` it encounters), you’ll have to clean weak connections.
-
-Fortunately, it’s really simple: just call `database.prune(threshold)`.
-Connections whose `weight <= threshold` are removed, reclaiming memory.
-
-Typically you’ll want to do this:
-
-```CoffeeScript
-# regularly prune the database (or else memory will explode)
-do prune = ->
-  # database.size is the number of connections in the underlying network
-  console.log "database size: #{database.size} entries"
-  if database.size > 500000 # for instance
-    console.log "pruning.."
-    pruned = database.prune 1
-    console.log "pruned #{pruned.keywords} keywords and #{pruned.ngrams} ngrams\n"
-    setTimeout prune, 1000
-  else
-    console.log "no need to prune."
-    setTimeout prune, 5000
-```
+4. The engine also try to detect weak relationships between concepts, by injecting synonyms from a thesaurus of the English language. It is nice because it can create hidden links between objects very quickly (eg. "dog picture" will be weakly connected to "wolf video")
 
 
-### User recommendation
+## Features
+
+### Efficient
+
+Even if data is scarce, the injection of external relationships make it possible to work on a few events (eg. less than 10). It won't be perfect, it will still perform better than with no data at all.
+
+### Self-regulating
+
+The network can change over time. New connections can be created, old ones can be reinforced or deleted. A user can choose to hate something he used to love months ago.
+
+### More or less customizable
+
+You are not limited to -1 or +1, you can use any value. For instance if the user like a product, that could be a +1, and if he buy it, a +5. This is up to you, you should do AB testing or other research to tweak this.
+Just remember that a signal value of 0 will have no effect, because it represents the non-action (eg. the user just ignore the ad, or skip a product evaluation). If you want to force a link to be weakened (eg. automatically, after a few days or weeks) you have to use a negative value.
+
+## Known issues
+
+ * It would work better with a filter for the most common (and thus irrelevant) keywords. Than can be implemented used some kind of TF-IDF-like algorithm, but I've just not done it yet.
+
+ * Injecting additional, weak connections is powerful, but using a thesaurus is still a bit limited. It would work even better with link data from DBpedia's ontology, or other semantic graph databases.
+
+ * The memory usage can be a problem, because a lot of data is stored per-user. You will eventually need to purge manaully the network from time to time, in order to remove the weakest/old links. That could be automatic, but it depends on how much memory you can use, so it won't be easy to implement this kind of GC.
+
+ * The profile networks are not easily human-readable. They are made by and for the machine. But you could try to export them to visualize the graph in Gephi or Sigma.js. That could be interesting
 
 
-#### Creating a new Profile
+## TODO
 
-```CoffeeScript
-profile = new Profile()
-```
+ * Export / Save of the recommendation database. That's a block, without that Iit is still a bit useless.
 
-#### Learning User Preference
-
-Be sure to save the full text along with the keywords.
-You can have Fussy hide the keywords from the end user, if you want;
-but Fussy needs them internally to compute scores.
-
-```CoffeeScript
-profile.learn "there is snow at the train station", ["weather","city","snow","winter"], +1
-profile.learn "it is too hot in the city hall",     ["weather","city","summer","hot"],  -1
-```
-
-#### Recommending a text
-
-```CoffeeScript
-tagged = database.tag [
-  "a brand new movie synopsis with a cool scenario"
-  "a new movie about teletubbies"
-  "martians have been discovered on Mercury! but they are dead"
-]
-recommended = profile.recommend tagged
-```
-
-(To be continued…)
-
-
-## Examples
-
-  (See the `/examples` folder.)
-
-  The example `crawler.coffee` that show how one could use Twitter to get a "randomly" tagged dataset for free. (Notice: this example has a few dependencies. But, they’re all on NPM.)
-
-## Wishlist
-
- * unit tests
 
 ## Changelog
+
+#### 0.0.2
+
+ * Total rewrite. See README for more information. Yup, this file.
 
 #### 0.0.1 (Wednesday, December 5, 2012)
 
