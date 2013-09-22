@@ -23,10 +23,15 @@ var events = [
   }
 ];
 
-var engine = new fussy.Engine();
+var engine = new fussy.Engine({
+  stringSize: [3, 14],
+  ngramsSize: 3
+});
 
 for (var i=0 ; i < events.length ; i++) {
   engine.pushEvent(events[i]);
 }
+
+engine.prune(-2, 2);
 
 console.log(JSON.stringify(engine.profiles));
