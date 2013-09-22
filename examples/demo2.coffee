@@ -47,4 +47,4 @@ do main = ->
 
   engine.prune -2, 2
   
-  log pretty engine.profiles
+  log JSON.stringify engine.profiles
