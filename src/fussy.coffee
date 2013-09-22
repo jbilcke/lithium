@@ -14,9 +14,7 @@ POSITIVE = exports.POSITIVE = +1
 NEGATIVE = exports.NEGATIVE = -1
 NEUTRAL  = exports.NEUTRAL  = 0
 
-#################################
-# EXTRACT N-GRAMS FROM A STRING #
-#################################
+# Extract n-grams from a string, returns a map
 ngramize = (words, n) ->
   unless Array.isArray words
     words = words.split ' '
@@ -35,13 +33,15 @@ ngramize = (words, n) ->
     grams["#{gram}"] = gram
   grams
 
+
+
 class exports.Engine
   constructor: (opts={}) ->
     @stringSize = opts.stringSize ? [0, 30]
     @ngramsSize = opts.ngramsSize ? 2
     @debug      = opts.debug ? no
-    debug = if debug then console.log else ->
-    @profiles = {}
+    debug       = if @debug then console.log else ->
+    @profiles   = {}
 
   pushEvent: (event) ->
 
