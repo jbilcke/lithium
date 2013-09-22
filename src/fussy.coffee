@@ -1,7 +1,9 @@
-
+fs        = require 'fs'
 thesaurus = require 'thesaurus'
 
 debug = ->
+
+isString = (obj) -> !!(obj is '' or (obj and obj.charCodeAt and obj.substr))
 
 enrich = (words) ->
   moreWords = []
@@ -37,11 +39,14 @@ ngramize = (words, n) ->
 
 class exports.Engine
   constructor: (opts={}) ->
+    if isString opts
+      debug "loading '#{opts}'.."
+      opts = JSON.parse fs.readFileSync opts, 'utf8'
     @stringSize = opts.stringSize ? [0, 30]
-    @ngramsSize = opts.ngramsSize ? 2
+    @ngramSize  = opts.ngramSize ? 2
     @debug      = opts.debug ? no
     debug       = if @debug then console.log else ->
-    @profiles   = {}
+    @profiles   = opts.profiles ? {}
 
   pushEvent: (event) ->
 
@@ -65,7 +70,7 @@ class exports.Engine
     # raw words, and synonyms
 
 
-    for facet, _ of ngramize event.content, @ngramsSize
+    for facet, _ of ngramize event.content, @ngramSize
       continue unless @stringSize[0] < facet.length < @stringSize[1]
       profile[facet] = event.signal + (profile[facet] ? 0)
       changed.content++
@@ -74,7 +79,7 @@ class exports.Engine
     # TODO: use TF-IDF to further refine the filter,
     # are remove over-used words
     for synonym in enrich event.content.split(' ')
-      for facet, _ of ngramize synonym, 3
+      for facet, _ of ngramize synonym, @ngramSize
         continue unless @stringSize[0] < facet.length < @stringSize[1]
         profile[facet] = event.signal + (profile[facet] ? 0)
         changed.synonyms++
@@ -94,3 +99,26 @@ class exports.Engine
 
   # return the top N users who may be interested in the content
   matchAll: (content, N) ->
+
+  save: (filePath) ->
+    throw "Error, no file path given" unless filePath?
+    # the code is written using appendFileSync, this is not pretty
+    # but when exporting huge database it allows us to see the progression line by line
+    # eg. using "watch ls -l" or "tail -f file.json" on unix
+    write = (x) -> fs.appendFileSync filePath, x.toString() + '\n'
+    #write = (x) -> console.log "#{x}"
+    fs.writeFileSync filePath, '{\n' # first line is in write-mode
+    write """  "stringSize": [#{@stringSize}],"""
+    write """  "ngramSize": #{@ngramSize},"""
+    write """  "profiles": {"""
+
+    remaining_profiles = Object.keys(@profiles).length # not efficient?
+    for profile, facets of @profiles
+      write """    "#{profile}": {"""
+      remaining_facets = Object.keys(facets).length # not efficient?
+      for facet, weight of facets
+        write """      "#{facet}": #{weight}#{if --remaining_facets > 0 then ',' else ''}"""
+      write """    }#{if --remaining_profiles > 0 then ',' else ''}"""
+    write """  }\n}"""
+
+

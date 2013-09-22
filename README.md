@@ -39,13 +39,23 @@ var events = [
   }
 ];
 
-var engine = new fussy.Engine();
+
+var engine = new fussy.Engine("./existing_database.json");
+// OR
+var engine = new fussy.Engine({
+  "ngramSize": 3,
+  "debug": true // totally optional, if you enable this this will print some stuff to the console
+});
 
 for (var i=0 ; i < events.length ; i++) {
   engine.pushEvent(events[i]);
 }
 
-console.log(JSON.stringify(engine.profiles))
+// just for debug
+console.log(JSON.stringify(engine.profiles));
+
+// exports the database to a json file
+engine.saveAs("demo1.json");
 ```
 
 ## Algorithm

@@ -25,7 +25,7 @@ var events = [
 
 var engine = new fussy.Engine({
   stringSize: [3, 14],
-  ngramsSize: 3
+  ngramSize: 3
 });
 
 for (var i=0 ; i < events.length ; i++) {
@@ -35,3 +35,5 @@ for (var i=0 ; i < events.length ; i++) {
 engine.prune(-2, 2);
 
 console.log(JSON.stringify(engine.profiles));
+
+engine.save("demo1.json");
