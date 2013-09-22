@@ -1,212 +1,183 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
   <head>
-    <meta charset="utf-8">
+    <meta charset='utf-8'>
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <title>Node Fussy by jbilcke</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link href='https://fonts.googleapis.com/css?family=Architects+Daughter' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
 
-    <link rel="stylesheet" href="stylesheets/styles.css">
-    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
-    <script src="javascripts/scale.fix.js"></script>
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
     <!--[if lt IE 9]>
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
+
+    <title>Fussy by jbilcke</title>
   </head>
+
   <body>
-    <div class="wrapper">
-      <header>
-        <h1 class="header">Node Fussy</h1>
-        <p class="header">A recommendation engine that care about user actions</p>
+    <header>
+      <div class="inner">
+        <h1>Fussy</h1>
+        <h2>A recommendation engine that care about user actions</h2>
+        <a href="https://github.com/jbilcke/node-fussy" class="button"><small>View project on</small>GitHub</a>
+      </div>
+    </header>
 
-        <ul>
-          <li class="download"><a class="buttons" href="https://github.com/jbilcke/node-fussy/zipball/master">Download ZIP</a></li>
-          <li class="download"><a class="buttons" href="https://github.com/jbilcke/node-fussy/tarball/master">Download TAR</a></li>
-          <li><a class="buttons github" href="https://github.com/jbilcke/node-fussy">View On GitHub</a></li>
-        </ul>
+    <div id="content-wrapper">
+      <div class="inner clearfix">
+        <section id="main-content">
+          <h1>
+<a name="node-fussy" class="anchor" href="#node-fussy"><span class="octicon octicon-link"></span></a>node-fussy</h1>
 
-        <p class="header">This project is maintained by <a class="header name" href="https://github.com/jbilcke">jbilcke</a></p>
+<p><em>javascript recommendation engine</em></p>
 
+<p>NOTE: I'm not an English native, so feel free to open issues if you see typos and bad grammar</p>
 
-      </header>
-      <section>
-        <h1>node-fussy</h1>
+<h2>
+<a name="usage" class="anchor" href="#usage"><span class="octicon octicon-link"></span></a>Usage</h2>
 
-<p><em>A recommendation engine that care about user actions</em></p>
+<h3>
+<a name="installation" class="anchor" href="#installation"><span class="octicon octicon-link"></span></a>Installation</h3>
 
-<h2>Presentation</h2>
-
-<p>Fussy is a minimalist recommendation engine. It filters unwanted noise out of your news streams, but not too much: fussy will watch carefully and try to suggest things from time to time.
-If you change your mind later, fussy will detect it, and adjust your profile a.k.a "filter bubble",
-so that it is not a bubble anymore.</p>
-
-<p>It's sounds like magic, but you can trust fussy. Because you know, he is very picky.</p>
-
-<h2>How it works</h2>
-
-<p>It's based on a basic, naive-bayesian style algorithm:
-Everytime you call profile.learn() this will increment or decrement some weights in the underlying network of tags.
-That's why Fussy can fix profiles back: you can decrement the importance of keywords dynamically, hours, days or months after liking them.</p>
-
-<h2>Installation</h2>
-
-<pre><code>$ npm install fussy
+<pre><code>$ npm install https://github.com/jbilcke/node-fussy --save
 </code></pre>
 
-<h2>Demo</h2>
+<h3>
+<a name="basic-demo" class="anchor" href="#basic-demo"><span class="octicon octicon-link"></span></a>Basic demo</h3>
 
-<div class="highlight"><pre><span class="p">{</span><span class="nx">Database</span><span class="p">,</span> <span class="nx">Profile</span><span class="p">}</span> <span class="o">=</span> <span class="nx">require</span> <span class="s">'fussy'</span>
-<span class="nv">database = </span><span class="k">new</span> <span class="nx">Database</span><span class="p">()</span>
-<span class="nx">database</span><span class="p">.</span><span class="nx">learn</span>
-  <span class="s">"Twitter to sue Google over twitter stream monetization"</span><span class="o">:</span> <span class="p">[</span><span class="s">"Technology"</span><span class="p">,</span> <span class="s">"Twitter"</span><span class="p">,</span> <span class="s">"Google"</span><span class="p">,</span> <span class="s">"Internet"</span><span class="p">]</span>
-  <span class="s">"A new library open in the east center in NYC"</span><span class="o">:</span> <span class="p">[</span><span class="s">"city"</span><span class="p">,</span><span class="s">"library"</span><span class="p">,</span><span class="s">"nyc"</span><span class="p">]</span>
-  <span class="s">"Rumors: Apple to launch a new tablet for emerging markets"</span><span class="o">:</span> <span class="p">[</span><span class="s">"Technology"</span><span class="p">,</span> <span class="s">"Apple"</span><span class="p">,</span> <span class="s">"Rumor"</span><span class="p">]</span>
-  <span class="s">"Microsoft reveal its new data center"</span><span class="o">:</span> <span class="p">[</span><span class="s">"Technology"</span><span class="p">,</span> <span class="s">"Rumor"</span><span class="p">,</span> <span class="s">"Microsoft"</span><span class="p">]</span>
-  <span class="s">"An energy-friendly data center for emerging countries"</span><span class="o">:</span> <span class="p">[</span><span class="s">"Technology"</span><span class="p">,</span> <span class="s">"World"</span><span class="p">,</span> <span class="s">"Energy"</span><span class="p">]</span>
-  <span class="s">"History of the countries: world music festival at the museum"</span><span class="o">:</span> <span class="p">[</span><span class="s">"Music"</span><span class="p">,</span> <span class="s">"City"</span><span class="p">,</span><span class="s">"Culture"</span><span class="p">]</span>
-  <span class="s">"Visiting a museum is good for health"</span><span class="o">:</span> <span class="p">[</span><span class="s">"Health"</span><span class="p">,</span> <span class="s">"Culture"</span><span class="p">]</span>
-  <span class="s">"Using home brew to install appplications on your Apple macbook"</span><span class="o">:</span> <span class="p">[</span><span class="s">"Computers"</span><span class="p">,</span> <span class="s">"Software"</span><span class="p">,</span> <span class="s">"Apple"</span><span class="p">]</span>
-  <span class="s">"How to brew your own beer"</span><span class="o">:</span> <span class="p">[</span><span class="s">"DIY"</span><span class="p">,</span> <span class="s">"Fooding"</span><span class="p">,</span> <span class="s">"Beverages"</span><span class="p">,</span> <span class="s">"Beer"</span><span class="p">]</span>
-  <span class="s">"Facebook to reveal a new open source library"</span><span class="o">:</span> <span class="p">[</span><span class="s">"Opensource"</span><span class="p">,</span><span class="s">"Technology"</span><span class="p">,</span><span class="s">"Facebook"</span><span class="p">,</span><span class="s">"Social Networks"</span><span class="p">]</span>
+<div class="highlight highlight-Javascript"><pre><span class="kd">var</span> <span class="nx">fussy</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'fussy'</span><span class="p">);</span>
+<span class="kd">var</span> <span class="nx">events</span> <span class="o">=</span> <span class="p">[</span>
+  <span class="p">{</span>
+    <span class="nx">user</span><span class="o">:</span> <span class="s1">'test_user'</span><span class="p">,</span> <span class="c1">// a unique ID to identify a user</span>
+    <span class="nx">content</span><span class="o">:</span> <span class="s2">"a video advertisement about an upcoming movie featuring pirates"</span><span class="p">,</span>
+    <span class="nx">signal</span><span class="o">:</span> <span class="nx">fussy</span><span class="p">.</span><span class="nx">POSITIVE</span>
+  <span class="p">},</span> <span class="p">{</span>
+    <span class="nx">user</span><span class="o">:</span> <span class="s1">'test_user'</span><span class="p">,</span>
+    <span class="nx">content</span><span class="o">:</span> <span class="s2">"a youtube ad about hackers"</span><span class="p">,</span>
+    <span class="nx">signal</span><span class="o">:</span> <span class="nx">fussy</span><span class="p">.</span><span class="nx">POSITIVE</span>
+  <span class="p">},</span> <span class="p">{</span>
+    <span class="nx">user</span><span class="o">:</span> <span class="s1">'test_user'</span><span class="p">,</span>
+    <span class="nx">content</span><span class="o">:</span> <span class="s2">"a facebook ad selling cloud hosting"</span><span class="p">,</span>
+    <span class="nx">signal</span><span class="o">:</span> <span class="nx">fussy</span><span class="p">.</span><span class="nx">POSITIVE</span>
+  <span class="p">},</span> <span class="p">{</span>
+    <span class="nx">user</span><span class="o">:</span> <span class="s1">'test_user'</span><span class="p">,</span>
+    <span class="nx">content</span><span class="o">:</span> <span class="s2">"a video advertisement featuring video games"</span><span class="p">,</span>
+    <span class="nx">signal</span><span class="o">:</span> <span class="nx">fussy</span><span class="p">.</span><span class="nx">NEGATIVE</span>
+  <span class="p">},</span> <span class="p">{</span>
+    <span class="nx">user</span><span class="o">:</span> <span class="s1">'test_user'</span><span class="p">,</span>
+    <span class="nx">content</span><span class="o">:</span> <span class="s2">"a facebook ad about video games"</span><span class="p">,</span>
+    <span class="nx">signal</span><span class="o">:</span> <span class="nx">fussy</span><span class="p">.</span><span class="nx">NEGATIVE</span>
+  <span class="p">}</span>
+<span class="p">];</span>
 
-<span class="nv">profile = </span><span class="k">new</span> <span class="nx">Profile</span><span class="p">()</span>
 
-<span class="c1"># news to ask the user for like/dislike</span>
-<span class="nv">training = </span><span class="nx">database</span><span class="p">.</span><span class="nx">tag</span> <span class="p">[</span>
-  <span class="s">"Visit the NYC museum using your tablet"</span>
-  <span class="s">"How to brew your own coffee"</span>
-  <span class="s">"Google to launch a new museum app"</span>
-  <span class="s">"Apple to sue Microsoft"</span>
-<span class="p">]</span>
+<span class="kd">var</span> <span class="nx">engine</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">fussy</span><span class="p">.</span><span class="nx">Engine</span><span class="p">(</span><span class="s2">"./existing_database.json"</span><span class="p">);</span>
+<span class="c1">// OR</span>
+<span class="kd">var</span> <span class="nx">engine</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">fussy</span><span class="p">.</span><span class="nx">Engine</span><span class="p">({</span>
+  <span class="s2">"ngramSize"</span><span class="o">:</span> <span class="mi">3</span><span class="p">,</span>
+  <span class="s2">"debug"</span><span class="o">:</span> <span class="kc">true</span> <span class="c1">// totally optional, if you enable this this will print some stuff to the console</span>
+<span class="p">});</span>
 
-<span class="k">for</span> <span class="nx">txt</span><span class="p">,</span> <span class="nx">keywords</span> <span class="k">of</span> <span class="nx">training</span>
+<span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span><span class="o">=</span><span class="mi">0</span> <span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">events</span><span class="p">.</span><span class="nx">length</span> <span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">engine</span><span class="p">.</span><span class="nx">pushEvent</span><span class="p">(</span><span class="nx">events</span><span class="p">[</span><span class="nx">i</span><span class="p">]);</span>
+<span class="p">}</span>
 
-  <span class="c1"># +1: like, 0: indifference, -1: dislike </span>
-  <span class="nv">choice = </span><span class="mi">1</span>
+<span class="c1">// just for debug</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">engine</span><span class="p">.</span><span class="nx">profiles</span><span class="p">));</span>
 
-  <span class="nx">profile</span><span class="p">.</span><span class="nx">learn</span> <span class="nx">txt</span><span class="p">,</span> <span class="nx">keywords</span><span class="p">,</span> <span class="nx">choice</span>
-
-<span class="c1"># news to sort / rate</span>
-<span class="nv">news = </span><span class="nx">database</span><span class="p">.</span><span class="nx">tag</span> <span class="p">[</span>
-  <span class="s">"Open source conference give free beer to first 50 people in NY"</span>
-  <span class="s">"What is in people's head? an in-depth data analysis"</span>
-<span class="p">]</span>
-<span class="nv">recommendations = </span><span class="nx">profile</span><span class="p">.</span><span class="nx">recommend</span> <span class="nx">news</span>
-<span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="s">"--&gt; </span><span class="si">#{</span><span class="nb">Object</span><span class="p">.</span><span class="nx">keys</span> <span class="nx">recommendations</span><span class="si">}</span><span class="s">"</span>
+<span class="c1">// exports the database to a json file</span>
+<span class="nx">engine</span><span class="p">.</span><span class="nx">saveAs</span><span class="p">(</span><span class="s2">"demo1.json"</span><span class="p">);</span>
 </pre></div>
 
-<h2>Documentation</h2>
+<h2>
+<a name="algorithm" class="anchor" href="#algorithm"><span class="octicon octicon-link"></span></a>Algorithm</h2>
 
-<h3>Automatic text tagging</h3>
+<ol>
+<li><p>The user evaluates an object (eg. a tweet, a song, an ad..) by giving a score.
+This score is typically +1 for a positive evaluation (eg. a like, a click on an ad, or when he buys a product),
+but it can also be -1, for negative evaluation (eg. dislike, product removed from the cart, ad marked as irrelevant)</p></li>
+<li><p>This score is sent together with a content to the recommendation engine. For the moment the content <em>must</em> be a plain english text string (this can be a wikipedia page, an ontology, a list of keywords.. anything relevant, with some meaning).</p></li>
+<li><p>The engine extracts patterns of concepts (n-grams), and will reinforce (or weaken) connections between these concepts, depending on the evaluation given by the user.</p></li>
+<li><p>The engine also try to detect weak relationships between concepts, by injecting synonyms from a thesaurus of the English language. It is nice because it can create hidden links between objects very quickly (eg. "dog picture" will be weakly connected to "wolf video", even if we never display a "dog video" or a "wolf picture" to the user)</p></li>
+</ol><h2>
+<a name="features" class="anchor" href="#features"><span class="octicon octicon-link"></span></a>Features</h2>
 
-<p>Fussy has a built-in text tagger. </p>
+<h3>
+<a name="efficient" class="anchor" href="#efficient"><span class="octicon octicon-link"></span></a>Efficient</h3>
 
-<h4>Learning tags</h4>
+<p>Even if data is scarce, the injection of external relationships make it possible to work on a few events (eg. less than 10). It won't be perfect, but it should still perform better than with no data at all.</p>
 
-<p>Fussy need to learn tags from an existing dataset: </p>
+<h3>
+<a name="self-regulating" class="anchor" href="#self-regulating"><span class="octicon octicon-link"></span></a>Self-regulating</h3>
 
-<div class="highlight"><pre><span class="nv">fussy = </span><span class="nx">require</span> <span class="s">'fussy'</span>
-<span class="nv">database = </span><span class="k">new</span> <span class="nx">fussy</span><span class="p">.</span><span class="nx">Database</span><span class="p">()</span>
-<span class="nx">database</span><span class="p">.</span><span class="nx">learn</span>
-  <span class="s">"a short test text"</span><span class="o">:</span> <span class="p">[</span><span class="s">"keyword one"</span><span class="p">,</span> <span class="s">"keyword two"</span><span class="p">]</span>
-  <span class="s">"a second text"</span><span class="o">:</span> <span class="p">[</span><span class="s">"keyword one"</span><span class="p">,</span> <span class="s">"a new keyword"</span><span class="p">]</span>
-</pre></div>
+<p>The network can change over time. New connections can be created, old ones can be reinforced or deleted. A user can choose to hate something he used to love months ago.</p>
 
-<h4>Tagging words</h4>
+<h3>
+<a name="more-or-less-customizable" class="anchor" href="#more-or-less-customizable"><span class="octicon octicon-link"></span></a>More or less customizable</h3>
 
-<p>Then you can use it to tag text:</p>
+<p>You are not limited to -1 or +1, you can use any value. For instance if the user likes a product, that could be a +1, and if he buys it, a +5. This is up to you, you should do AB testing or other research to tweak this.
+Just remember that a signal value of 0 will have no effect, because it represents the non-action (eg. the user just ignore the ad, or skip a product evaluation). If you want to force a link to be weakened (eg. automatically, after a few days or weeks) you have to use a negative value.</p>
 
-<div class="highlight"><pre><span class="nv">tagged = </span><span class="nx">database</span><span class="p">.</span><span class="nx">tag</span> <span class="p">[</span>
-  <span class="s">" a second test"</span>
-<span class="p">]</span>
-</pre></div>
-
-<h4>Saving memory</h4>
-
-<p>Fussy is a memory hog: since it keeps everything in RAM
-(every single ngram he encounters) you will have to
-clean weaks connections by calling database.prune(threshold)</p>
-
-<p>connections with a weight &lt;= threshold will be removed,
-saving memory.</p>
-
-<p>Typically you will want to do this:</p>
-
-<div class="highlight"><pre><span class="c1"># we need to regularly prune the database or else memory will explode  </span>
-<span class="nx">do</span> <span class="nv">prune = </span><span class="o">-&gt;</span>
-  <span class="c1"># database.size is the number of connections in the underlying network</span>
-  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="s">"database size: </span><span class="si">#{</span><span class="nx">database</span><span class="p">.</span><span class="nx">size</span><span class="si">}</span><span class="s"> entries"</span>
-  <span class="k">if</span> <span class="nx">database</span><span class="p">.</span><span class="nx">size</span> <span class="o">&gt;</span> <span class="mi">500000</span> <span class="c1"># for instance</span>
-    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="s">"pruning.."</span>
-    <span class="nv">pruned = </span><span class="nx">database</span><span class="p">.</span><span class="nx">prune</span> <span class="mi">1</span>
-    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="s">"pruned </span><span class="si">#{</span><span class="nx">pruned</span><span class="p">.</span><span class="nx">keywords</span><span class="si">}</span><span class="s"> keywords and </span><span class="si">#{</span><span class="nx">pruned</span><span class="p">.</span><span class="nx">ngrams</span><span class="si">}</span><span class="s"> ngrams\n"</span>
-    <span class="nx">setTimeout</span> <span class="nx">prune</span><span class="p">,</span> <span class="mi">1000</span>
-  <span class="k">else</span>
-    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="s">"no need to prune."</span>
-    <span class="nx">setTimeout</span> <span class="nx">prune</span><span class="p">,</span> <span class="mi">5000</span>
-</pre></div>
-
-<h3>User recommendation</h3>
-
-<h4>Creating a new Profile</h4>
-
-<div class="highlight"><pre><span class="nv">profile = </span><span class="k">new</span> <span class="nx">Profile</span><span class="p">()</span>
-</pre></div>
-
-<h4>Learning from a user preference</h4>
-
-<p>We need to save the full text together with the keywords.
-The keywords can be hidden for the end user (he can only see the text if you want),
-but you have to keep in mind that internally Fussy need them 
-to compute its scores.</p>
-
-<div class="highlight"><pre><span class="nx">profile</span><span class="p">.</span><span class="nx">learn</span> <span class="s">"there is snow at the train station"</span><span class="p">,</span> <span class="p">[</span><span class="s">"weather"</span><span class="p">,</span><span class="s">"city"</span><span class="p">,</span><span class="s">"snow"</span><span class="p">,</span><span class="s">"winter"</span><span class="p">],</span> <span class="o">+</span><span class="mi">1</span>
-<span class="nx">profile</span><span class="p">.</span><span class="nx">learn</span> <span class="s">"it is too hot in the city hall"</span><span class="p">,</span>     <span class="p">[</span><span class="s">"weather"</span><span class="p">,</span><span class="s">"city"</span><span class="p">,</span><span class="s">"summer"</span><span class="p">,</span><span class="s">"hot"</span><span class="p">],</span>  <span class="o">-</span><span class="mi">1</span>
-</pre></div>
-
-<h4>Recommending a text</h4>
-
-<div class="highlight"><pre><span class="nv">tagged = </span><span class="nx">database</span><span class="p">.</span><span class="nx">tag</span> <span class="p">[</span>
-  <span class="s">"a brand new movie synopsis with a cool scenario"</span>
-  <span class="s">"a new movie about teletubbies"</span>
-  <span class="s">"martians have been discovered on Mercury! but they are dead"</span>
-<span class="p">]</span>
-<span class="nv">recommended = </span><span class="nx">profile</span><span class="p">.</span><span class="nx">recommend</span> <span class="nx">tagged</span>
-</pre></div>
-
-<p>To be continued, see the example</p>
-
-<h2>Examples</h2>
-
-<p>See the /examples folder.</p>
-
-<p>There is an example crawler.coffee (careful: it needs a few dependencies, but they are on NPM) that show how one could use Twitter to get a "randomly" tagged dataset for free.</p>
-
-<h2>Wishlist</h2>
+<h2>
+<a name="known-issues" class="anchor" href="#known-issues"><span class="octicon octicon-link"></span></a>Known issues</h2>
 
 <ul>
-<li>unit tests</li>
-</ul><h2>Changelog</h2>
-
-<h4>0.0.1 (Wednesday, December 5, 2012)</h4>
+<li><p>It would work better with a filter for the most common (and thus irrelevant) keywords. Than can be implemented using some kind of TF-IDF-like algorithm, but I've just not done it yet.</p></li>
+<li><p>Injecting additional, weak connections is powerful, but using a thesaurus is still a bit limited. It would work even better with network data from DBpedia's ontology, or other semantic graph databases.</p></li>
+<li><p>The memory usage can be a problem, because a lot of data is stored per-user. You will eventually need to purge the network from time to time, in order to remove the weakest/old links. That could be automatic, but it depends on how much memory you can use, so it won't be easy to implement this kind of GC.</p></li>
+<li><p>The profile networks are not easily human-readable. They are made by and for the machine. But you could try to export them to visualize the graph in Gephi for instance.</p></li>
+</ul><h2>
+<a name="todo" class="anchor" href="#todo"><span class="octicon octicon-link"></span></a>TODO</h2>
 
 <ul>
-<li>Added database.size</li>
-<li>Added database.prune(threshold)</li>
-<li>Added database.toFile(fileName)</li>
-<li>Removed the toy twitter database from core</li>
+<li>Export / Save of the recommendation database. That's a block, without that Iit is still a bit useless.</li>
+</ul><h2>
+<a name="changelog" class="anchor" href="#changelog"><span class="octicon octicon-link"></span></a>Changelog</h2>
+
+<h4>
+<a name="002" class="anchor" href="#002"><span class="octicon octicon-link"></span></a>0.0.2</h4>
+
+<ul>
+<li>Total rewrite. See README for more information. Yup, this file.</li>
+</ul><h4>
+<a name="001-wednesday-december-5-2012" class="anchor" href="#001-wednesday-december-5-2012"><span class="octicon octicon-link"></span></a>0.0.1 (Wednesday, December 5, 2012)</h4>
+
+<ul>
+<li>Added <code>database.size</code>
+</li>
+<li>Added <code>database.prune(threshold)</code>
+</li>
+<li>Added <code>database.toFile(fileName)</code>
+</li>
+<li>Removed the toy Twitter database from core</li>
 <li>Added an example crawler you could use to build a tag database</li>
-</ul><h4>0.0.0</h4>
+</ul><h4>
+<a name="000" class="anchor" href="#000"><span class="octicon octicon-link"></span></a>0.0.0</h4>
 
 <ul>
 <li>Initial version, not very documented</li>
 </ul>
-      </section>
-      <footer>
-        <p><small>Hosted on <a href="https://pages.github.com">GitHub Pages</a> using the Dinky theme</small></p>
-      </footer>
+        </section>
+
+        <aside id="sidebar">
+          <a href="https://github.com/jbilcke/node-fussy/zipball/master" class="button">
+            <small>Download</small>
+            .zip file
+          </a>
+          <a href="https://github.com/jbilcke/node-fussy/tarball/master" class="button">
+            <small>Download</small>
+            .tar.gz file
+          </a>
+
+          <p class="repo-owner"><a href="https://github.com/jbilcke/node-fussy"></a> is maintained by <a href="https://github.com/jbilcke">jbilcke</a>.</p>
+
+          <p>This page was generated by <a href="pages.github.com">GitHub Pages</a> using the Architect theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.</p>
+        </aside>
+      </div>
     </div>
-    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
-		
+
+  
   </body>
 </html>
