@@ -9,7 +9,7 @@ NOTE: I'm not an English native, so feel free to open issues if you see typos an
 
 ### Installation
 
-    $ npm install --save
+    $ npm install https://github.com/jbilcke/node-fussy --save
 
 ### Basic demo
 
