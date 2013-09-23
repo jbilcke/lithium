@@ -15,49 +15,82 @@ You can see the examples/ dir, or:
 
 ### Basic demo
 
-```Javascript
+```javascript
 var fussy = require('fussy');
-var events = [
+var samples = [
   {
-    user: 'test_user', // a unique ID to identify a user
-    content: "a video advertisement about an upcoming movie featuring pirates",
-    signal: fussy.POSITIVE
+    profile: 'test_user_1', signal: fussy.POSITIVE,
+    content: "a video advertisement about an upcoming movie featuring pirates"
   }, {
-    user: 'test_user',
-    content: "a youtube ad about hackers",
-    signal: fussy.POSITIVE
+    profile: 'test_user_1',  signal: fussy.POSITIVE,
+    content: "a youtube ad about hackers"
   }, {
-    user: 'test_user',
-    content: "a facebook ad selling cloud hosting",
-    signal: fussy.POSITIVE
+    profile: 'test_user_1',  signal: fussy.POSITIVE,
+    content: "a facebook ad selling cloud hosting"
   }, {
-    user: 'test_user',
-    content: "a video advertisement featuring video games",
-    signal: fussy.NEGATIVE
+    profile: 'test_user_1', signal: fussy.NEGATIVE,
+    content: "a video advertisement featuring video games"
   }, {
-    user: 'test_user',
-    content: "a facebook ad about video games",
-    signal: fussy.NEGATIVE
+    profile: 'test_user_1', signal: fussy.NEGATIVE,
+    content: "a facebook ad about video games"
+  }, {
+    profile: 'test_user_2',  signal: fussy.POSITIVE,
+    content: "a video advertisement about an upcoming movie featuring cowboys"
+  }, {
+    profile: 'test_user_2',  signal: fussy.NEGATIVE,
+    content: "a movie trailer about bearded magicians"
+  }, {
+    profile: 'test_user_2', signal: fussy.NEGATIVE,
+    content: "a facebook ad selling cloud hosting"
+  }, {
+    profile: 'test_user_2', signal: fussy.POSITIVE,
+    content: "a trailer for movie featuring cowboy sharks against aliens"
+  }, {
+    profile: 'test_user_2', signal: fussy.POSITIVE,
+    content: "a facebook ad about a new farm game"
   }
 ];
 
-
-var engine = new fussy.Engine("./existing_database.json");
+// var engine = new fussy.Engine("./database.json");
 // OR
 var engine = new fussy.Engine({
-  "ngramSize": 3,
-  "debug": true // totally optional, if you enable this this will print some stuff to the console
+  stringSize: [3, 14],
+  ngramSize: 3
 });
 
-for (var i=0 ; i < events.length ; i++) {
-  engine.pushEvent(events[i]);
+for (var i=0 ; i < samples.length ; i++) {
+  engine.pushEvent(samples[i]);
 }
 
-// just for debug
-console.log(JSON.stringify(engine.profiles));
+// remove noise, by filtering weakest connections between concepts
+engine.prune(-2, 2);
 
-// exports the database to a json file
-engine.saveAs("demo1.json");
+
+engine.rateProfiles('an ad showing a video game about pirates', { 
+  profiles: ['test_user_1', 
+             'test_user_2'] 
+});
+
+engine.rateProfiles(
+ 'an ad showing a video game about pirates', { limit: 2 }
+);
+// [ ["test_user_2",14], ["test_user_1",-9] ]
+
+engine.rateContents('test_user_1', [
+  'an ad about magicians',
+  'an ad about tablet games'
+]);
+// [ ["an ad about magicians",0], ["an ad about tablet games",-3] ]
+
+
+engine.rateContents('test_user_2', [
+  'an ad about magicians',
+  'an ad about tablet games'
+]);
+//  [ ["an ad about tablet games",0], ["an ad about magicians",-2] ]
+
+
+engine.save("database.json");
 ```
 
 ## Algorithm
@@ -72,25 +105,31 @@ but it can also be -1, for negative evaluation (eg. dislike, product removed fro
 
 4. The engine also try to detect weak relationships between concepts, by injecting synonyms from a thesaurus of the English language. It is nice because it can create hidden links between objects very quickly (eg. "dog picture" will be weakly connected to "wolf video", even if we never display a "dog video" or a "wolf picture" to the user)
 
+## Characteristics
 
-## Features
+### Scalable
 
-### Efficient
+This is a bit early
 
-Even if data is scarce, the injection of external relationships make it possible to work on a few events (eg. less than 10). It won't be perfect, but it should still perform better than with no data at all.
+### Data-efficient
+
+Even if data is scarce, the use of weak relationship (for the moment only synonyms) improve results even when there is not a lot of data to be trained on (eg. less than 10). there will be errors, but it should still perform better than with no data at all.
 
 ### Self-regulating
 
 The network can change over time. New connections can be created, old ones can be reinforced or deleted. A user can choose to hate something he used to love months ago.
 
-### More or less customizable
+### Flexible
+
+You can put anything in the content string, eg meta-keyword to describe not only the content but also the context or environment. 
 
 You are not limited to -1 or +1, you can use any value. For instance if the user likes a product, that could be a +1, and if he buys it, a +5. This is up to you, you should do AB testing or other research to tweak this.
 Just remember that a signal value of 0 will have no effect, because it represents the non-action (eg. the user just ignore the ad, or skip a product evaluation). If you want to force a link to be weakened (eg. automatically, after a few days or weeks) you have to use a negative value.
 
+
 ## Known issues
 
- * It would work better with a filter for the most common (and thus irrelevant) keywords. Than can be implemented using some kind of TF-IDF-like algorithm, but I've just not done it yet.
+ * It would work better with a filter for the most common (and thus irrelevant) keywords. Than can be implemented using some kind of TF-IDF-like algorithm, but I've just not done it yet. This is the next thing on the TODO.
 
  * Injecting additional, weak connections is powerful, but using a thesaurus is still a bit limited. It would work even better with network data from DBpedia's ontology, or other semantic graph databases.
 

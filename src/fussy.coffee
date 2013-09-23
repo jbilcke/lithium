@@ -94,11 +94,49 @@ class exports.Engine
         if min < facets[facet] < max
           delete facets[facet]
 
-  # return scores for a single person, to see if she would like the content
-  matchOne: (id, content) ->
+  # search for profiles matching a given content,
+  # and evaluate them
+  # you can optionally limit the number of results to the first N,
+  # using the {limit: N} parameter,
+  # or filter result to a restricted list of profiles using {profiles: ["some_id"]}
+  rateProfiles: (content, opts={}) ->
+    filter = opts.profiles ? []
+    limit = opts.limit
+    results = []
+    for id, profile of @profiles
+      continue if filter.length and id not in filter
+      score = 0
+      for facet, _ of ngramize content, @ngramSize
+        score += profile[facet] ? 0
+      for synonym in enrich content.split ' '
+        for facet, _ of ngramize synonym, @ngramSize
+          score += profile[facet] ? 0
 
-  # return the top N users who may be interested in the content
-  matchAll: (content, N) ->
+      results.push [id, score]
+
+      continue unless limit?
+      break if --limit <= 0
+
+    results.sort (a, b) -> b[1] - a[1]
+    results
+
+  # rate an array of contents for a given profile id,
+  # sorting results from best match to worst
+  rateContents: (id, contents) ->
+    profile = @profiles[id] ? {}
+
+    top = []
+    id = 0
+    for content in contents
+      score = 0
+      for facet, _ of ngramize content, @ngramSize
+        score += profile[facet] ? 0
+      for synonym in enrich content.split ' '
+        for facet, _ of ngramize synonym, @ngramSize
+          score += profile[facet] ? 0
+      top.push [content, score]
+    top.sort (a, b) -> b[1] - a[1]
+    top
 
   save: (filePath) ->
     throw "Error, no file path given" unless filePath?
