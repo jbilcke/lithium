@@ -140,10 +140,14 @@ Just remember that a signal value of 0 will have no effect, because it represent
 
 ## TODO
 
- * Export / Save of the recommendation database. That's a block, without that Iit is still a bit useless.
-
+ * Add a TF-IDF algorithm?
+ * MongoDB implementation?
 
 ## Changelog
+
+#### 0.0.3
+
+ * added the rateProfiles and rateContents methods
 
 #### 0.0.2
 
