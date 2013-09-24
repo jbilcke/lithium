@@ -8,7 +8,7 @@ NOTE: I'm not an English native, so feel free to open issues if you see typos an
 ## Summary
 
 node-fussy is a recommendation engine, powered by user actions.
-It learns from user actions by adjusting weights of a hidden network, one for each user.
+It learns from user actions by adjusting some weights in a hidden network, one for each user.
 This hidden network is built from the concepts extracted from the content evaluated by the user.
 Recommendations are thus unique to each user. It can work even with 1 user and a few events in its database.
 
