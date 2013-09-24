@@ -1,34 +1,36 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
   <head>
-    <meta charset='utf-8'>
+    <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <link href='https://fonts.googleapis.com/css?family=Architects+Daughter' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
-    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
-    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
+    <title>Fussy by jbilcke</title>
 
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <script src="javascripts/scale.fix.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
     <!--[if lt IE 9]>
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
-
-    <title>Fussy by jbilcke</title>
   </head>
-
   <body>
-    <header>
-      <div class="inner">
-        <h1>Fussy</h1>
-        <h2>Javascript recommendation engine</h2>
-        <a href="https://github.com/jbilcke/node-fussy" class="button"><small>View project on</small>GitHub</a>
-      </div>
-    </header>
+    <div class="wrapper">
+      <header>
+        <h1 class="header">Fussy</h1>
+        <p class="header">Javascript recommendation engine</p>
 
-    <div id="content-wrapper">
-      <div class="inner clearfix">
-        <section id="main-content">
-          <h1>
+        <ul>
+          <li class="download"><a class="buttons" href="https://github.com/jbilcke/node-fussy/zipball/master">Download ZIP</a></li>
+          <li class="download"><a class="buttons" href="https://github.com/jbilcke/node-fussy/tarball/master">Download TAR</a></li>
+          <li><a class="buttons github" href="https://github.com/jbilcke/node-fussy">View On GitHub</a></li>
+        </ul>
+
+        <p class="header">This project is maintained by <a class="header name" href="https://github.com/jbilcke">jbilcke</a></p>
+
+
+      </header>
+      <section>
+        <h1>
 <a name="node-fussy" class="anchor" href="#node-fussy"><span class="octicon octicon-link"></span></a>node-fussy</h1>
 
 <p><em>javascript recommendation engine</em></p>
@@ -38,10 +40,22 @@
 <h2>
 <a name="summary" class="anchor" href="#summary"><span class="octicon octicon-link"></span></a>Summary</h2>
 
-<p>node-fussy is a recommendation engine, powered by user actions.
-It learns from user actions by adjusting some weights in a hidden network, one for each user.
-This hidden network is built from the concepts extracted from the content evaluated by the user.
-Recommendations are thus unique to each user. It can work even with 1 user and a few events in its database.</p>
+<p>Fussy is a recommendation engine, powered by user actions.</p>
+
+<p>It does recommendation by binding likes and dislikes to patterns of a documents.</p>
+
+<p>A like will reinforce the bound between two patterns (can be a word, or a sequence a word; a concept), while a dislike will weaken it.</p>
+
+<p>The longer the patterns, the more complex the network, and accurate the results will get, but at the cost of increasing memory and cpu usage.
+For now I am using patterns of length 3 by default, enough to catch basic expressions and simple concepts.</p>
+
+<p>This network is then evaluated against a new content, to compute a matching score.
+Positive memories will thus increase the score of the document, and bad memories will decrease it.</p>
+
+<p>Since the algorith doesn't use similarity between users (this is easily computable, though),
+you can do recommendations of content even with one user.</p>
+
+<p>To simulate a "people in the same box than you also liked.." recommendation, you just have to pick the next alternatives in the sorted results.</p>
 
 <p><a href="https://nodei.co/npm/fussy/"><img src="https://nodei.co/npm/fussy.png?downloads=true&amp;stars=true" alt="NPM"></a></p>
 
@@ -131,17 +145,7 @@ Recommendations are thus unique to each user. It can work even with 1 user and a
 </pre></div>
 
 <h2>
-<a name="algorithm" class="anchor" href="#algorithm"><span class="octicon octicon-link"></span></a>Algorithm</h2>
-
-<ol>
-<li><p>The user evaluates an object (eg. a tweet, a song, an ad..) by giving a score.
-This score is typically +1 for a positive evaluation (eg. a like, a click on an ad, or when he buys a product),
-but it can also be -1, for negative evaluation (eg. dislike, product removed from the cart, ad marked as irrelevant)</p></li>
-<li><p>This score is sent together with a content to the recommendation engine. For the moment the content <em>must</em> be a plain english text string (this can be a wikipedia page, an ontology, a list of keywords.. anything relevant, with some meaning).</p></li>
-<li><p>The engine extracts patterns of concepts (n-grams), and will reinforce (or weaken) connections between these concepts, depending on the evaluation given by the user.</p></li>
-<li><p>The engine also try to detect weak relationships between concepts, by injecting synonyms from a thesaurus of the English language. It is nice because it can create hidden links between objects very quickly (eg. "dog picture" will be weakly connected to "wolf video", even if we never display a "dog video" or a "wolf picture" to the user)</p></li>
-</ol><h2>
-<a name="characteristics" class="anchor" href="#characteristics"><span class="octicon octicon-link"></span></a>Characteristics</h2>
+<a name="remarks--features" class="anchor" href="#remarks--features"><span class="octicon octicon-link"></span></a>Remarks / features</h2>
 
 <h3>
 <a name="data-efficient" class="anchor" href="#data-efficient"><span class="octicon octicon-link"></span></a>Data-efficient</h3>
@@ -254,25 +258,12 @@ Just remember that a signal value of 0 will have no effect, because it represent
 <ul>
 <li>Initial version, not very documented</li>
 </ul>
-        </section>
-
-        <aside id="sidebar">
-          <a href="https://github.com/jbilcke/node-fussy/zipball/master" class="button">
-            <small>Download</small>
-            .zip file
-          </a>
-          <a href="https://github.com/jbilcke/node-fussy/tarball/master" class="button">
-            <small>Download</small>
-            .tar.gz file
-          </a>
-
-          <p class="repo-owner"><a href="https://github.com/jbilcke/node-fussy"></a> is maintained by <a href="https://github.com/jbilcke">jbilcke</a>.</p>
-
-          <p>This page was generated by <a href="pages.github.com">GitHub Pages</a> using the Architect theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.</p>
-        </aside>
-      </div>
+      </section>
+      <footer>
+        <p><small>Hosted on <a href="https://pages.github.com">GitHub Pages</a> using the Dinky theme</small></p>
+      </footer>
     </div>
-
-  
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+		
   </body>
 </html>
