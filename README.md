@@ -9,11 +9,11 @@ NOTE: I'm not an English native, so feel free to open issues if you see typos an
 
 Fussy is a recommendation engine, powered by user actions.
 
-It does recommendation by binding likes and dislikes to patterns of a documents.
+It does recommendation by associating likes and dislikes to patterns extracted from the document.
 
 A like will reinforce the bound between two patterns (can be a word, or a sequence a word; a concept), while a dislike will weaken it.
 
-The longer the patterns, the more complex the network, and accurate the results will get, but at the cost of increasing memory and cpu usage.
+The longer the patterns, the more complex the network, and accurate the results. But this is unfortunately at the cost of increased memory and cpu usage.
 For now I am using patterns of length 3 by default, enough to catch basic expressions and simple concepts.
 
 This network is then evaluated against a new content, to compute a matching score.
@@ -22,7 +22,8 @@ Positive memories will thus increase the score of the document, and bad memories
 Since the algorith doesn't use similarity between users (this is easily computable, though),
 you can do recommendations of content even with one user.
 
-To simulate a "people in the same box than you also liked.." recommendation, you just have to pick the next alternatives in the sorted results.
+If you really want to add some novelty (but Fussy does not like this), 
+you just have to pick the next alternatives in the sorted results.
 
 
 [![NPM](https://nodei.co/npm/fussy.png?downloads=true&stars=true)](https://nodei.co/npm/fussy/)
