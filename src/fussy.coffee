@@ -5,6 +5,12 @@ debug = ->
 
 isString = (obj) -> !!(obj is '' or (obj and obj.charCodeAt and obj.substr))
 
+replaceAll = (find, replace, str) ->
+   str.replace(new RegExp(find, 'g'), replace)
+
+exports.cleanContent = cleanContent = (content) -> 
+  content.replace(/\s+/g, ' ').replace(/\n/g, '')
+
 enrich = (words) ->
   moreWords = []
   for word in words
@@ -69,8 +75,9 @@ class exports.Engine
     # our dataset contains two collections:
     # raw words, and synonyms
 
+    content = cleanContent event.content
 
-    for facet, _ of ngramize event.content, @ngramSize
+    for facet, _ of ngramize content, @ngramSize
       continue unless @stringSize[0] < facet.length < @stringSize[1]
       profile[facet] = event.signal + (profile[facet] ? 0)
       changed.content++
@@ -78,7 +85,7 @@ class exports.Engine
     # use external data to improve results
     # TODO: use TF-IDF to further refine the filter,
     # are remove over-used words
-    for synonym in enrich event.content.split(' ')
+    for synonym in enrich content.split(' ')
       for facet, _ of ngramize synonym, @ngramSize
         continue unless @stringSize[0] < facet.length < @stringSize[1]
         profile[facet] = event.signal + (profile[facet] ? 0)
@@ -103,15 +110,21 @@ class exports.Engine
     filter = opts.profiles ? []
     limit = opts.limit
     results = []
+
+    content = cleanContent content
+
+    facets = for facet, _ of ngramize content, @ngramSize
+      facet
+
+    for synonym in enrich content.split ' '
+      for facet, _ of ngramize synonym, @ngramSize
+        facets.push facet
+
     for id, profile of @profiles
       continue if filter.length and id not in filter
       score = 0
-      for facet, _ of ngramize content, @ngramSize
+      for facet in facets
         score += profile[facet] ? 0
-      for synonym in enrich content.split ' '
-        for facet, _ of ngramize synonym, @ngramSize
-          score += profile[facet] ? 0
-
       results.push [id, score]
 
       continue unless limit?
