@@ -7,10 +7,22 @@ NOTE: I'm not an English native, so feel free to open issues if you see typos an
 
 ## Summary
 
-node-fussy is a recommendation engine, powered by user actions.
-It learns from user actions by adjusting some weights in a hidden network, one for each user.
-This hidden network is built from the concepts extracted from the content evaluated by the user.
-Recommendations are thus unique to each user. It can work even with 1 user and a few events in its database.
+Fussy is a recommendation engine, powered by user actions.
+
+It does recommendation by binding likes and dislikes to patterns of a documents.
+
+A like will reinforce the bound between two patterns (can be a word, or a sequence a word; a concept), while a dislike will weaken it.
+
+The longer the patterns, the more complex the network, and accurate the results will get, but at the cost of increasing memory and cpu usage.
+For now I am using patterns of length 3 by default, enough to catch basic expressions and simple concepts.
+
+This network is then evaluated against a new content, to compute a matching score.
+Positive memories will thus increase the score of the document, and bad memories will decrease it.
+
+Since the algorith doesn't use similarity between users (this is easily computable, though),
+you can do recommendations of content even with one user.
+
+To simulate a "people in the same box than you also liked.." recommendation, you just have to pick the next alternatives in the sorted results.
 
 
 [![NPM](https://nodei.co/npm/fussy.png?downloads=true&stars=true)](https://nodei.co/npm/fussy/)
@@ -99,19 +111,7 @@ engine.rateContents('test_user_2', [
 engine.save("database.json");
 ```
 
-## Algorithm
-
-1. The user evaluates an object (eg. a tweet, a song, an ad..) by giving a score.
-This score is typically +1 for a positive evaluation (eg. a like, a click on an ad, or when he buys a product),
-but it can also be -1, for negative evaluation (eg. dislike, product removed from the cart, ad marked as irrelevant)
-
-2. This score is sent together with a content to the recommendation engine. For the moment the content *must* be a plain english text string (this can be a wikipedia page, an ontology, a list of keywords.. anything relevant, with some meaning).
-
-3. The engine extracts patterns of concepts (n-grams), and will reinforce (or weaken) connections between these concepts, depending on the evaluation given by the user.
-
-4. The engine also try to detect weak relationships between concepts, by injecting synonyms from a thesaurus of the English language. It is nice because it can create hidden links between objects very quickly (eg. "dog picture" will be weakly connected to "wolf video", even if we never display a "dog video" or a "wolf picture" to the user)
-
-## Characteristics
+## Remarks / features
 
 
 ### Data-efficient
