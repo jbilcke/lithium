@@ -7,6 +7,12 @@ NOTE: I'm not an English native, so feel free to open issues if you see typos an
 
 ## Summary
 
+node-fussy is a recommendation engine, powered by user actions.
+It learns from user actions by adjusting weights of a hidden network, one for each user.
+This hidden network is built from the concepts extracted from the content evaluated by the user.
+Recommendations are thus unique to each user. It can work even with 1 user and a few events in its database.
+
+
 [![NPM](https://nodei.co/npm/fussy.png?downloads=true&stars=true)](https://nodei.co/npm/fussy/)
 
 ## Usage
@@ -107,9 +113,6 @@ but it can also be -1, for negative evaluation (eg. dislike, product removed fro
 
 ## Characteristics
 
-### Scalable
-
-This is a bit early
 
 ### Data-efficient
 
@@ -137,6 +140,39 @@ Just remember that a signal value of 0 will have no effect, because it represent
 
  * The profile networks are not easily human-readable. They are made by and for the machine. But you could try to export them to visualize the graph in Gephi for instance.
 
+## Documentation
+
+### new fussy.Engine()
+
+Instanciate a new engine with default settings
+
+### new fussy.Engine(file_path)
+
+Instanciate a new engine by loading a data dump file (basically a collection of profiles + the config)
+
+### new fussy.Engine({ ngramSize: 3 }}
+
+Instanciate a new engine, with a ngramSize of 3. Values > 3 go deeper into the meaning of the sentence (complex word patterns are added to the network), but dramatically increase the memory andcpu usage. "a n-gram size of 3 should be enough for most people" ™.
+
+### fussy.Engine#rateContents(profile_id, array_of_content_strings)
+
+Evaluate the interest of one profile for a set of contents.
+
+### fussy.Engine#rateProfiles(content[, { profiles: array_of_profile_ids, limit: n_top_profiles_to_keep}])
+
+Search for profiles that could be the most interested by a givent content.
+
+### fussy.Engine#prune(min_weight, max_weight)
+
+Delete non-significant links (those near 0 influence)
+
+###fussy.Engine#save(file_path)
+
+Dump the databse to a JSON file
+
+### fussy.clearContent(string)
+
+The cleaning function used internally by Fussy. It remove useless spaces and line returns. Handy to clean tweets to be printed in the console, for instance.
 
 ## TODO
 
