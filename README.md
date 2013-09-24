@@ -145,9 +145,13 @@ Just remember that a signal value of 0 will have no effect, because it represent
 
 ## Changelog
 
+#### 0.0.4
+
+ * Small optimization for the rateContents method
+
 #### 0.0.3
 
- * added the rateProfiles and rateContents methods
+ * Added the rateProfiles and rateContents methods
 
 #### 0.0.2
 

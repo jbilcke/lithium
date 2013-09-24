@@ -1,3 +1,4 @@
+*.json
 examples/dump.json
 examples/credentials.*
 node_modules
