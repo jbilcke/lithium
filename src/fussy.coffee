@@ -1,21 +1,61 @@
 fs        = require 'fs'
 thesaurus = require 'thesaurus'
+{pick}    = require 'deck'
 
 debug = ->
 
 isString = (obj) -> !!(obj is '' or (obj and obj.charCodeAt and obj.substr))
 
+P = (p=0.5) -> + (Math.random() < p)
+
 replaceAll = (find, replace, str) ->
    str.replace(new RegExp(find, 'g'), replace)
 
 exports.cleanContent = cleanContent = (content) -> 
-  content.replace(/\s+/g, ' ').replace(/\n/g, '')
+  content.replace(/(?:\.|\?|!)+/g, '.').replace(/\s+/g, ' ').replace(/(?:\\n)+/g, '').replace(/\n+/g, '')
 
 enrich = (words) ->
   moreWords = []
   for word in words
-    for anotherWord in thesaurus.find word
-      moreWords.push anotherWord unless anotherWord in moreWords
+    similarWords = thesaurus.find word
+
+    if similarWords.length
+      # ignore words with too many different meanings, for complexity's sake
+      continue if similarWords.length > 3
+
+      # only add up to 4 similar words
+      for similarWord in similarWords[...3]
+
+        # ignore words too small or too large
+        continue unless 2 < similarWord.length < 13
+
+        # ignore synonyms already added
+        continue if similarWord in moreWords
+
+        moreWords.push similarWord 
+
+    # no synonym found.. maybe a number?
+    else
+      test = (Number) word
+      continue unless (not isNaN(test) and isFinite(test))
+
+      categories = [
+        10, 20, 30, 40, 50, 60, 70, 80, 90,
+        100, 200, 300, 400, 500, 600, 700, 800, 900,
+        1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000, 
+        10000
+      ]
+      for category in categories
+        if test < category
+          moreWords.push "less_than_#{category}"
+          break
+
+      for category in categories.reverse()
+        if test > category
+          moreWords.push "more_than_#{category}"
+          break
+    
+
   moreWords
 
 POSITIVE = exports.POSITIVE = +1
@@ -23,9 +63,12 @@ NEGATIVE = exports.NEGATIVE = -1
 NEUTRAL  = exports.NEUTRAL  = 0
 
 # Extract n-grams from a string, returns a map
-ngramize = (words, n) ->
+_ngramize = (words, n) ->
   unless Array.isArray words
-    words = words.split ' '
+    words = for w in words.split ' '
+      continue if w.length < 3
+      w
+
   grams = {}
   if n < 2
     for w in words
@@ -33,7 +76,7 @@ ngramize = (words, n) ->
     return grams
   for i in [0...words.length]
     gram = words[i...i+n]
-    subgrams = ngramize gram, n - 1
+    subgrams = _ngramize gram, n - 1
     for k,v of subgrams
       grams[k] = v
     if i > words.length - n
@@ -41,7 +84,9 @@ ngramize = (words, n) ->
     grams["#{gram}"] = gram
   grams
 
-
+ngramize = (words, n) -> 
+  for ngram in Object.keys _ngramize words, n
+    ngram.split(",").sort().toString()
 
 class exports.Engine
   constructor: (opts={}) ->
@@ -49,10 +94,32 @@ class exports.Engine
       debug "loading '#{opts}'.."
       opts = JSON.parse fs.readFileSync opts, 'utf8'
     @stringSize = opts.stringSize ? [0, 30]
-    @ngramSize  = opts.ngramSize ? 2
+    @ngramSize  = opts.ngramSize ? 3
     @debug      = opts.debug ? no
+    @sampling   = opts.sampling ? 0.3
     debug       = if @debug then console.log else ->
     @profiles   = opts.profiles ? {}
+
+
+  multiplyFacets: (content, facets=[]) ->
+
+    words = content.split ' '
+
+    for a in facets
+      for b in facets
+        facet = [a,b].sort().toString()
+        continue if a is b
+        continue unless P @sampling
+        facets.push facet
+
+    # find extra facets using a synonym database
+    for synonym in enrich words
+      for facet in @ngramize synonym
+        facets.push facet
+    facets
+
+  ngramize: (words) ->
+    ngramize words, @ngramSize
 
   pushEvent: (event) ->
 
@@ -69,29 +136,18 @@ class exports.Engine
 
     debug "updating profile #{event.profile}.."
 
-    # pretty straightfoward
-    changed = content: 0, synonyms: 0
-
-    # our dataset contains two collections:
-    # raw words, and synonyms
-
     content = cleanContent event.content
 
-    for facet, _ of ngramize content, @ngramSize
+    alreadyAdded = {}
+    for facet in @multiplyFacets content, @ngramize content
+
+      # filter
       continue unless @stringSize[0] < facet.length < @stringSize[1]
-      profile[facet] = event.signal + (profile[facet] ? 0)
-      changed.content++
+      continue if facet of alreadyAdded
 
-    # use external data to improve results
-    # TODO: use TF-IDF to further refine the filter,
-    # are remove over-used words
-    for synonym in enrich content.split(' ')
-      for facet, _ of ngramize synonym, @ngramSize
-        continue unless @stringSize[0] < facet.length < @stringSize[1]
-        profile[facet] = event.signal + (profile[facet] ? 0)
-        changed.synonyms++
-
-    debug "#{if event.signal > 0 then 'reinforced' else 'weakened'} #{JSON.stringify changed} facets"
+      alreadyAdded[facet] = profile[facet] = event.signal + (profile[facet] ? 0)
+    
+    @
 
   # lighten the database, removing weak connections (neither strongly positive or negative)
   prune: (min, max) ->
@@ -100,6 +156,7 @@ class exports.Engine
         facets[facet] = facets[facet] - 1
         if min < facets[facet] < max
           delete facets[facet]
+    @
 
   # search for profiles matching a given content,
   # and evaluate them
@@ -113,12 +170,10 @@ class exports.Engine
 
     content = cleanContent content
 
-    facets = for facet, _ of ngramize content, @ngramSize
-      facet
-
-    for synonym in enrich content.split ' '
-      for facet, _ of ngramize synonym, @ngramSize
-        facets.push facet
+    facets = []
+    for facet in @multiplyFacets content, @ngramize content
+      continue if facet in facets
+      facets.push facet
 
     for id, profile of @profiles
       continue if filter.length and id not in filter
@@ -142,11 +197,11 @@ class exports.Engine
     id = 0
     for content in contents
       score = 0
-      for facet, _ of ngramize content, @ngramSize
+      alreadyAdded = {}
+      for facet in @multiplyFacets content, @ngramize content
+        continue if facet of alreadyAdded
         score += profile[facet] ? 0
-      for synonym in enrich content.split ' '
-        for facet, _ of ngramize synonym, @ngramSize
-          score += profile[facet] ? 0
+        alreadyAdded[facet] = yes
       top.push [content, score]
     top.sort (a, b) -> b[1] - a[1]
     top

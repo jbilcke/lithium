@@ -35,7 +35,8 @@ var events = [
 
 var engine = new fussy.Engine({
   stringSize: [3, 14],
-  ngramSize: 3
+  ngramSize: 1,
+  sampling: 0.8 // if you only have keywords, then increase the sampling
 });
 
 for (var i=0 ; i < events.length ; i++) {
