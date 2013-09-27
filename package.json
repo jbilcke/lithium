@@ -5,8 +5,8 @@
   "author": "Julian Bilcke <julian.bilcke@daizoru.com>",
   "scripts": {
     "test": "node_modules/mocha/bin/mocha --bail --require chai --compilers coffee:coffee-script test/*.coffee",
-    "build": "coffee --compile --bare --output lib/ src/",
-    "watch": "coffee --watch --compile --bare --output lib/ src/"
+    "build": "coffee --compile --output lib/ src/",
+    "watch": "coffee --watch --compile --output lib/ src/"
   },
   "main": "./lib/fussy",
   "repository": "http://github.com/jbilcke/node-fussy.git",
