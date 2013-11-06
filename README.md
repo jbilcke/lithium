@@ -213,3 +213,7 @@ The cleaning function used internally by Fussy. It remove useless spaces and lin
 #### 0.0.0
 
  * Initial version, not very documented
+
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/jbilcke/node-fussy/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
