@@ -3,13 +3,18 @@ node-fussy
 
 *javascript recommendation engine*
 
-## LATEST NEWS - Nov 4th, 2013
+## LATEST NEWS - Dec 15th, 2013
+
+I'm putting this side project and experiment in standby. 
+
+
+## Nov 4th, 2013
 
 Have you checked out the awesome http://prediction.io project? It is written in Scala, uses Hadoop, and is more mature, scalable and complete than Fussy, which is more like an experimental algorithm (actually it could be implemented inside prediction.io I guess).
 
 They both have the same kind of programming interface, where you push "like / dislike" events: http://docs.prediction.io/current/apis/u2i.html.
 
-Anyway, I will still work on node-fussy. Prediction.io will hopefully gets the same features one day (like user ranking, not just item ranking), and I will soon put the Egeria.io server, a REST API based on Fussy, on GitHub: so stay tuned.
+
 
 ---------------
 
