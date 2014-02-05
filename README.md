@@ -3,7 +3,27 @@ node-fussy
 
 *javascript recommendation engine*
 
-## LATEST NEWS - Dec 15th, 2013
+## LATEST NEWS - Feb 5th, 2014
+
+Fussy is back! I rewrote everything from scratch and simplified the design: there is no more +1 or -1, the new workflow is much cooler. Teaser:
+
+```
+Fussy = require('fussy');
+db = Fussy();
+db.learn({ user: 'jbilcke', action: 'watch trailer', content: samples.movie1.tags });
+db.learn({ user: 'jbilcke', action: 'watch trailer', content: samples.movie2.tags });
+db.learn({ user: 'jbilcke', action: 'buy ticket',    content: samples.movie1.tags });
+db.learn({ user: 'jbilcke', action: 'buy ticket',    content: samples.movie2.tags });
+db.learn({ user: 'jbilcke', action: 'like',          content: samples.movie1.tags });
+db.learn({ user: 'jbilcke', action: 'like',          content: samples.song1.tags });
+db.learn({ user: 'jbilcke', action: 'dislike',       content: samples.movie2.tags });
+```
+
+I'll push the commits soon, stay tuned.
+
+
+
+## Dec 15th, 2013
 
 I'm putting this side project and experiment in standby. 
 
