@@ -19,11 +19,17 @@ Basic examples included in the project:
 - [Logic: playing with boolean and fuzzy truth tables](https://github.com/jbilcke/node-fussy/blob/master/examples/logic)
 - [Mushrooms: recommendation of mushrooms](https://github.com/jbilcke/node-fussy/blob/master/examples/mushrooms)
 
+Advanced examples:
+
+- [Wilt: detecting diseased trees in Quickbird imagery using Fussy](https://github.com/jbilcke/node-fussy-examples/blob/master/wilt)
+- [Sonar: categorization of sonar data into mines or rocks](https://github.com/jbilcke/node-fussy-examples/blob/master/sonar)
+
+
 ## License
 
 BSD (see LICENCE.txt file).
 
-## Current limitation
+## Current issues
 
 Fussy is an experimental project, and has a number of pitfalls:
 

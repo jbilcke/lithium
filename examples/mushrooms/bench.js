@@ -1,4 +1,3 @@
-//
 var Fussy = require('fussy');
 var fussy = new Fussy();
 
