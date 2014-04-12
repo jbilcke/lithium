@@ -27,7 +27,6 @@ More examples:
 - [Letters: letter recognition (OCR)](https://github.com/jbilcke/node-fussy-examples/tree/master/letters)
 
 
-
 ## License
 
 BSD (see LICENCE.txt file).
