@@ -21,8 +21,9 @@ Demo examples (included in the project):
 
 More examples:
 
-- [Wilt: detecting diseased trees in Quickbird imagery](https://github.com/jbilcke/node-fussy-examples/tree/master/wilt)
 - [Sonar: categorization of sonar data into mines or rocks](https://github.com/jbilcke/node-fussy-examples/tree/master/sonar)
+- [Wilt: detecting diseased trees in Quickbird imagery](https://github.com/jbilcke/node-fussy-examples/tree/master/wilt)
+- [Emotiv: detecting eye state from Emotiv EEG Headset](https://github.com/jbilcke/fussy-examples/tree/master/emotiv)
 - [Letters: letter recognition (OCR)](https://github.com/jbilcke/node-fussy-examples/tree/master/letters)
 
 
