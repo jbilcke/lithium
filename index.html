@@ -1,281 +1,256 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
   <head>
-    <meta charset='utf-8'>
+    <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <link href='https://fonts.googleapis.com/css?family=Architects+Daughter' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
-    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
-    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
+    <title>Fussy by jbilcke</title>
 
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
     <!--[if lt IE 9]>
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
-
-    <title>Fussy by jbilcke</title>
   </head>
-
   <body>
-    <header>
-      <div class="inner">
+    <div class="wrapper">
+      <header>
         <h1>Fussy</h1>
-        <h2>Javascript recommendation engine</h2>
-        <a href="https://github.com/jbilcke/node-fussy" class="button"><small>View project on</small>GitHub</a>
-      </div>
-    </header>
+        <p>JSON prediction and recommendation engine</p>
 
-    <div id="content-wrapper">
-      <div class="inner clearfix">
-        <section id="main-content">
-          <h1>
+        <p class="view"><a href="https://github.com/jbilcke/node-fussy">View the Project on GitHub <small>jbilcke/node-fussy</small></a></p>
+
+
+        <ul>
+          <li><a href="https://github.com/jbilcke/node-fussy/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/jbilcke/node-fussy/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/jbilcke/node-fussy">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h1>
 <a name="node-fussy" class="anchor" href="#node-fussy"><span class="octicon octicon-link"></span></a>node-fussy</h1>
 
-<p><em>javascript recommendation engine</em></p>
+<p><em>JSON prediction and recommendation engine</em></p>
 
-<p>NOTE: I'm not an English native, so feel free to open issues if you see typos and bad grammar</p>
+<p><a href="http://travis-ci.org/jbilcke/node-fussy"><img src="https://secure.travis-ci.org/jbilcke/node-fussy.png" alt="Build Status"></a>
+<a href="https://gemnasium.com/jbilcke/node-fussy"><img src="https://gemnasium.com/jbilcke/node-fussy.png" alt="Dependency Status"></a></p>
 
 <h2>
 <a name="summary" class="anchor" href="#summary"><span class="octicon octicon-link"></span></a>Summary</h2>
 
-<p>Fussy is a recommendation engine, powered by user actions.</p>
+<p>Fussy is an inference engine for Node. You can use it to guess the state of missing values in a JSON object.</p>
 
-<p>It does recommendation by associating likes and dislikes to patterns extracted from the document.</p>
-
-<p>A like will reinforce the bound between two patterns (can be a word, or a sequence a word; a concept), while a dislike will weaken it.</p>
-
-<p>The longer the patterns, the more complex the network, and accurate the results. But this is unfortunately at the cost of increased memory and cpu usage.
-For now I am using patterns of length 3 by default, enough to catch basic expressions and simple concepts.</p>
-
-<p>This network is then evaluated against a new content, to compute a matching score.
-Positive memories will thus increase the score of the document, and bad memories will decrease it.</p>
-
-<p>Since the algorith doesn't use similarity between users (this is easily computable, though),
-you can do recommendations of content even with one user.</p>
-
-<p>If you really want to add some novelty (but Fussy does not like this), 
-you just have to pick the next alternatives in the sorted results.</p>
-
-<p><a href="https://nodei.co/npm/fussy/"><img src="https://nodei.co/npm/fussy.png?downloads=true&amp;stars=true" alt="NPM"></a></p>
+<p>It works by trying to find the most probable values for missing attributes by scanning a database of previously seen objects, computing a weighted average based on similarity.</p>
 
 <h2>
-<a name="usage" class="anchor" href="#usage"><span class="octicon octicon-link"></span></a>Usage</h2>
+<a name="examples" class="anchor" href="#examples"><span class="octicon octicon-link"></span></a>Examples</h2>
 
-<p>You can see the examples/ dir, or:</p>
-
-<h3>
-<a name="basic-demo" class="anchor" href="#basic-demo"><span class="octicon octicon-link"></span></a>Basic demo</h3>
-
-<div class="highlight highlight-javascript"><pre><span class="kd">var</span> <span class="nx">fussy</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'fussy'</span><span class="p">);</span>
-<span class="kd">var</span> <span class="nx">samples</span> <span class="o">=</span> <span class="p">[</span>
-  <span class="p">{</span>
-    <span class="nx">profile</span><span class="o">:</span> <span class="s1">'test_user_1'</span><span class="p">,</span> <span class="nx">signal</span><span class="o">:</span> <span class="nx">fussy</span><span class="p">.</span><span class="nx">POSITIVE</span><span class="p">,</span>
-    <span class="nx">content</span><span class="o">:</span> <span class="s2">"a video advertisement about an upcoming movie featuring pirates"</span>
-  <span class="p">},</span> <span class="p">{</span>
-    <span class="nx">profile</span><span class="o">:</span> <span class="s1">'test_user_1'</span><span class="p">,</span>  <span class="nx">signal</span><span class="o">:</span> <span class="nx">fussy</span><span class="p">.</span><span class="nx">POSITIVE</span><span class="p">,</span>
-    <span class="nx">content</span><span class="o">:</span> <span class="s2">"a youtube ad about hackers"</span>
-  <span class="p">},</span> <span class="p">{</span>
-    <span class="nx">profile</span><span class="o">:</span> <span class="s1">'test_user_1'</span><span class="p">,</span>  <span class="nx">signal</span><span class="o">:</span> <span class="nx">fussy</span><span class="p">.</span><span class="nx">POSITIVE</span><span class="p">,</span>
-    <span class="nx">content</span><span class="o">:</span> <span class="s2">"a facebook ad selling cloud hosting"</span>
-  <span class="p">},</span> <span class="p">{</span>
-    <span class="nx">profile</span><span class="o">:</span> <span class="s1">'test_user_1'</span><span class="p">,</span> <span class="nx">signal</span><span class="o">:</span> <span class="nx">fussy</span><span class="p">.</span><span class="nx">NEGATIVE</span><span class="p">,</span>
-    <span class="nx">content</span><span class="o">:</span> <span class="s2">"a video advertisement featuring video games"</span>
-  <span class="p">},</span> <span class="p">{</span>
-    <span class="nx">profile</span><span class="o">:</span> <span class="s1">'test_user_1'</span><span class="p">,</span> <span class="nx">signal</span><span class="o">:</span> <span class="nx">fussy</span><span class="p">.</span><span class="nx">NEGATIVE</span><span class="p">,</span>
-    <span class="nx">content</span><span class="o">:</span> <span class="s2">"a facebook ad about video games"</span>
-  <span class="p">},</span> <span class="p">{</span>
-    <span class="nx">profile</span><span class="o">:</span> <span class="s1">'test_user_2'</span><span class="p">,</span>  <span class="nx">signal</span><span class="o">:</span> <span class="nx">fussy</span><span class="p">.</span><span class="nx">POSITIVE</span><span class="p">,</span>
-    <span class="nx">content</span><span class="o">:</span> <span class="s2">"a video advertisement about an upcoming movie featuring cowboys"</span>
-  <span class="p">},</span> <span class="p">{</span>
-    <span class="nx">profile</span><span class="o">:</span> <span class="s1">'test_user_2'</span><span class="p">,</span>  <span class="nx">signal</span><span class="o">:</span> <span class="nx">fussy</span><span class="p">.</span><span class="nx">NEGATIVE</span><span class="p">,</span>
-    <span class="nx">content</span><span class="o">:</span> <span class="s2">"a movie trailer about bearded magicians"</span>
-  <span class="p">},</span> <span class="p">{</span>
-    <span class="nx">profile</span><span class="o">:</span> <span class="s1">'test_user_2'</span><span class="p">,</span> <span class="nx">signal</span><span class="o">:</span> <span class="nx">fussy</span><span class="p">.</span><span class="nx">NEGATIVE</span><span class="p">,</span>
-    <span class="nx">content</span><span class="o">:</span> <span class="s2">"a facebook ad selling cloud hosting"</span>
-  <span class="p">},</span> <span class="p">{</span>
-    <span class="nx">profile</span><span class="o">:</span> <span class="s1">'test_user_2'</span><span class="p">,</span> <span class="nx">signal</span><span class="o">:</span> <span class="nx">fussy</span><span class="p">.</span><span class="nx">POSITIVE</span><span class="p">,</span>
-    <span class="nx">content</span><span class="o">:</span> <span class="s2">"a trailer for movie featuring cowboy sharks against aliens"</span>
-  <span class="p">},</span> <span class="p">{</span>
-    <span class="nx">profile</span><span class="o">:</span> <span class="s1">'test_user_2'</span><span class="p">,</span> <span class="nx">signal</span><span class="o">:</span> <span class="nx">fussy</span><span class="p">.</span><span class="nx">POSITIVE</span><span class="p">,</span>
-    <span class="nx">content</span><span class="o">:</span> <span class="s2">"a facebook ad about a new farm game"</span>
-  <span class="p">}</span>
-<span class="p">];</span>
-
-<span class="c1">// var engine = new fussy.Engine("./database.json");</span>
-<span class="c1">// OR</span>
-<span class="kd">var</span> <span class="nx">engine</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">fussy</span><span class="p">.</span><span class="nx">Engine</span><span class="p">({</span>
-  <span class="nx">stringSize</span><span class="o">:</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">14</span><span class="p">],</span>
-  <span class="nx">ngramSize</span><span class="o">:</span> <span class="mi">3</span>
-<span class="p">});</span>
-
-<span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span><span class="o">=</span><span class="mi">0</span> <span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">samples</span><span class="p">.</span><span class="nx">length</span> <span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
-  <span class="nx">engine</span><span class="p">.</span><span class="nx">pushEvent</span><span class="p">(</span><span class="nx">samples</span><span class="p">[</span><span class="nx">i</span><span class="p">]);</span>
-<span class="p">}</span>
-
-<span class="c1">// remove noise, by filtering weakest connections between concepts</span>
-<span class="nx">engine</span><span class="p">.</span><span class="nx">prune</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">);</span>
-
-
-<span class="nx">engine</span><span class="p">.</span><span class="nx">rateProfiles</span><span class="p">(</span><span class="s1">'an ad showing a video game about pirates'</span><span class="p">,</span> <span class="p">{</span> 
-  <span class="nx">profiles</span><span class="o">:</span> <span class="p">[</span><span class="s1">'test_user_1'</span><span class="p">,</span> 
-             <span class="s1">'test_user_2'</span><span class="p">]</span> 
-<span class="p">});</span>
-
-<span class="nx">engine</span><span class="p">.</span><span class="nx">rateProfiles</span><span class="p">(</span>
- <span class="s1">'an ad showing a video game about pirates'</span><span class="p">,</span> <span class="p">{</span> <span class="nx">limit</span><span class="o">:</span> <span class="mi">2</span> <span class="p">}</span>
-<span class="p">);</span>
-<span class="c1">// [ ["test_user_2",14], ["test_user_1",-9] ]</span>
-
-<span class="nx">engine</span><span class="p">.</span><span class="nx">rateContents</span><span class="p">(</span><span class="s1">'test_user_1'</span><span class="p">,</span> <span class="p">[</span>
-  <span class="s1">'an ad about magicians'</span><span class="p">,</span>
-  <span class="s1">'an ad about tablet games'</span>
-<span class="p">]);</span>
-<span class="c1">// [ ["an ad about magicians",0], ["an ad about tablet games",-3] ]</span>
-
-
-<span class="nx">engine</span><span class="p">.</span><span class="nx">rateContents</span><span class="p">(</span><span class="s1">'test_user_2'</span><span class="p">,</span> <span class="p">[</span>
-  <span class="s1">'an ad about magicians'</span><span class="p">,</span>
-  <span class="s1">'an ad about tablet games'</span>
-<span class="p">]);</span>
-<span class="c1">//  [ ["an ad about tablet games",0], ["an ad about magicians",-2] ]</span>
-
-
-<span class="nx">engine</span><span class="p">.</span><span class="nx">save</span><span class="p">(</span><span class="s2">"database.json"</span><span class="p">);</span>
-</pre></div>
-
-<h2>
-<a name="remarks--features" class="anchor" href="#remarks--features"><span class="octicon octicon-link"></span></a>Remarks / features</h2>
-
-<h3>
-<a name="data-efficient" class="anchor" href="#data-efficient"><span class="octicon octicon-link"></span></a>Data-efficient</h3>
-
-<p>Even if data is scarce, the use of weak relationship (for the moment only synonyms) improve results even when there is not a lot of data to be trained on (eg. less than 10). there will be errors, but it should still perform better than with no data at all.</p>
-
-<h3>
-<a name="self-regulating" class="anchor" href="#self-regulating"><span class="octicon octicon-link"></span></a>Self-regulating</h3>
-
-<p>The network can change over time. New connections can be created, old ones can be reinforced or deleted. A user can choose to hate something he used to love months ago.</p>
-
-<h3>
-<a name="flexible" class="anchor" href="#flexible"><span class="octicon octicon-link"></span></a>Flexible</h3>
-
-<p>You can put anything in the content string, eg meta-keyword to describe not only the content but also the context or environment. </p>
-
-<p>You are not limited to -1 or +1, you can use any value. For instance if the user likes a product, that could be a +1, and if he buys it, a +5. This is up to you, you should do AB testing or other research to tweak this.
-Just remember that a signal value of 0 will have no effect, because it represents the non-action (eg. the user just ignore the ad, or skip a product evaluation). If you want to force a link to be weakened (eg. automatically, after a few days or weeks) you have to use a negative value.</p>
-
-<h2>
-<a name="known-issues" class="anchor" href="#known-issues"><span class="octicon octicon-link"></span></a>Known issues</h2>
+<p>Basic examples included in the project:</p>
 
 <ul>
-<li><p>It would work better with a filter for the most common (and thus irrelevant) keywords. Than can be implemented using some kind of TF-IDF-like algorithm, but I've just not done it yet. This is the next thing on the TODO.</p></li>
-<li><p>Injecting additional, weak connections is powerful, but using a thesaurus is still a bit limited. It would work even better with network data from DBpedia's ontology, or other semantic graph databases.</p></li>
-<li><p>The memory usage can be a problem, because a lot of data is stored per-user. You will eventually need to purge the network from time to time, in order to remove the weakest/old links. That could be automatic, but it depends on how much memory you can use, so it won't be easy to implement this kind of GC.</p></li>
-<li><p>The profile networks are not easily human-readable. They are made by and for the machine. But you could try to export them to visualize the graph in Gephi for instance.</p></li>
+<li><a href="https://github.com/jbilcke/node-fussy/blob/master/examples/logic">Logic: playing with boolean and fuzzy truth tables</a></li>
+<li><a href="https://github.com/jbilcke/node-fussy/blob/master/examples/mushrooms">Mushrooms: recommendation of mushrooms</a></li>
 </ul><h2>
-<a name="documentation" class="anchor" href="#documentation"><span class="octicon octicon-link"></span></a>Documentation</h2>
+<a name="license" class="anchor" href="#license"><span class="octicon octicon-link"></span></a>License</h2>
 
-<h3>
-<a name="new-fussyengine" class="anchor" href="#new-fussyengine"><span class="octicon octicon-link"></span></a>new fussy.Engine()</h3>
-
-<p>Instanciate a new engine with default settings</p>
-
-<h3>
-<a name="new-fussyenginefile_path" class="anchor" href="#new-fussyenginefile_path"><span class="octicon octicon-link"></span></a>new fussy.Engine(file_path)</h3>
-
-<p>Instanciate a new engine by loading a data dump file (basically a collection of profiles + the config)</p>
-
-<h3>
-<a name="new-fussyengine-ngramsize-3-" class="anchor" href="#new-fussyengine-ngramsize-3-"><span class="octicon octicon-link"></span></a>new fussy.Engine({ ngramSize: 3 }}</h3>
-
-<p>Instanciate a new engine, with a ngramSize of 3. Values &gt; 3 go deeper into the meaning of the sentence (complex word patterns are added to the network), but dramatically increase the memory andcpu usage. "a n-gram size of 3 should be enough for most people" ™.</p>
-
-<h3>
-<a name="fussyengineratecontentsprofile_id-array_of_content_strings" class="anchor" href="#fussyengineratecontentsprofile_id-array_of_content_strings"><span class="octicon octicon-link"></span></a>fussy.Engine#rateContents(profile_id, array_of_content_strings)</h3>
-
-<p>Evaluate the interest of one profile for a set of contents.</p>
-
-<h3>
-<a name="fussyenginerateprofilescontent--profiles-array_of_profile_ids-limit-n_top_profiles_to_keep" class="anchor" href="#fussyenginerateprofilescontent--profiles-array_of_profile_ids-limit-n_top_profiles_to_keep"><span class="octicon octicon-link"></span></a>fussy.Engine#rateProfiles(content[, { profiles: array_of_profile_ids, limit: n_top_profiles_to_keep}])</h3>
-
-<p>Search for profiles that could be the most interested by a givent content.</p>
-
-<h3>
-<a name="fussyengineprunemin_weight-max_weight" class="anchor" href="#fussyengineprunemin_weight-max_weight"><span class="octicon octicon-link"></span></a>fussy.Engine#prune(min_weight, max_weight)</h3>
-
-<p>Delete non-significant links (those near 0 influence)</p>
-
-<h3>
-<a name="fussyenginesavefile_path" class="anchor" href="#fussyenginesavefile_path"><span class="octicon octicon-link"></span></a>fussy.Engine#save(file_path)</h3>
-
-<p>Dump the databse to a JSON file</p>
-
-<h3>
-<a name="fussyclearcontentstring" class="anchor" href="#fussyclearcontentstring"><span class="octicon octicon-link"></span></a>fussy.clearContent(string)</h3>
-
-<p>The cleaning function used internally by Fussy. It remove useless spaces and line returns. Handy to clean tweets to be printed in the console, for instance.</p>
+<p>BSD (see LICENCE.txt file).</p>
 
 <h2>
-<a name="todo" class="anchor" href="#todo"><span class="octicon octicon-link"></span></a>TODO</h2>
+<a name="current-limitation" class="anchor" href="#current-limitation"><span class="octicon octicon-link"></span></a>Current limitation</h2>
+
+<p>Fussy is an experimental project, and has a number of pitfalls:</p>
 
 <ul>
-<li>Add a TF-IDF algorithm?</li>
-<li>MongoDB implementation?</li>
+<li>all data must be loaded into memory (cannot use a remote db yet)</li>
+<li>extremely slow (see mushroom demo..)</li>
+<li>the "0" value is not supported well</li>
+<li>string distance function is a bit broken, and will be rewritten</li>
+<li>and probably many other bugs..</li>
 </ul><h2>
-<a name="changelog" class="anchor" href="#changelog"><span class="octicon octicon-link"></span></a>Changelog</h2>
+<a name="how-it-works" class="anchor" href="#how-it-works"><span class="octicon octicon-link"></span></a>How it works</h2>
+
+<h3>
+<a name="algorithm" class="anchor" href="#algorithm"><span class="octicon octicon-link"></span></a>Algorithm</h3>
+
+<p>The algorithm works as the following:</p>
+
+<p>For a given JSON object with some missing fields, it tries to determine the most probable value of these fields, by looking at all the past values, and computing the average.</p>
+
+<p>However, it does a weighted average: a different "trust" is given to each past object, depending on how close and relevant they are from the object to repair.</p>
+
+<p>For this, what Fussy do is iteraring over all the stored objects (in a map-reduce fashion), and computing a distance score, based on the similarity between values: strings, numbers..</p>
+
+<p>This distance will be used to weight the value of the missing field when computing the average.</p>
+
+<h2>
+<a name="quick-start" class="anchor" href="#quick-start"><span class="octicon octicon-link"></span></a>Quick-start</h2>
+
+<h3>
+<a name="installation" class="anchor" href="#installation"><span class="octicon octicon-link"></span></a>Installation</h3>
 
 <h4>
-<a name="004" class="anchor" href="#004"><span class="octicon octicon-link"></span></a>0.0.4</h4>
+<a name="as-a-dependency" class="anchor" href="#as-a-dependency"><span class="octicon octicon-link"></span></a>As a dependency</h4>
 
-<ul>
-<li>Small optimization for the rateContents method</li>
-</ul><h4>
-<a name="003" class="anchor" href="#003"><span class="octicon octicon-link"></span></a>0.0.3</h4>
+<p>Go to your Node (and NPM-managed) project, and run:</p>
 
-<ul>
-<li>Added the rateProfiles and rateContents methods</li>
-</ul><h4>
-<a name="002" class="anchor" href="#002"><span class="octicon octicon-link"></span></a>0.0.2</h4>
+<pre><code>$ npm add fussy --save
+</code></pre>
 
-<ul>
-<li>Total rewrite. See README for more information. Yup, this file.</li>
-</ul><h4>
-<a name="001-wednesday-december-5-2012" class="anchor" href="#001-wednesday-december-5-2012"><span class="octicon octicon-link"></span></a>0.0.1 (Wednesday, December 5, 2012)</h4>
+<h4>
+<a name="from-sources" class="anchor" href="#from-sources"><span class="octicon octicon-link"></span></a>From sources</h4>
 
-<ul>
-<li>Added <code>database.size</code>
-</li>
-<li>Added <code>database.prune(threshold)</code>
-</li>
-<li>Added <code>database.toFile(fileName)</code>
-</li>
-<li>Removed the toy Twitter database from core</li>
-<li>Added an example crawler you could use to build a tag database</li>
-</ul><h4>
-<a name="000" class="anchor" href="#000"><span class="octicon octicon-link"></span></a>0.0.0</h4>
+<p>To download the sources, build the coffee-script and link into your system:</p>
 
-<ul>
-<li>Initial version, not very documented</li>
-</ul>
-        </section>
+<pre><code>$ git clone git@github.com:jbilcke/node-fussy.git
+$ cd node-fussy
+$ npm run build
+$ npm link
+</code></pre>
 
-        <aside id="sidebar">
-          <a href="https://github.com/jbilcke/node-fussy/zipball/master" class="button">
-            <small>Download</small>
-            .zip file
-          </a>
-          <a href="https://github.com/jbilcke/node-fussy/tarball/master" class="button">
-            <small>Download</small>
-            .tar.gz file
-          </a>
+<h3>
+<a name="initialization" class="anchor" href="#initialization"><span class="octicon octicon-link"></span></a>Initialization</h3>
 
-          <p class="repo-owner"><a href="https://github.com/jbilcke/node-fussy"></a> is maintained by <a href="https://github.com/jbilcke">jbilcke</a>.</p>
+<p>First you have to get an instance of the class Fussy</p>
 
-          <p>This page was generated by <a href="pages.github.com">GitHub Pages</a> using the Architect theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.</p>
-        </aside>
-      </div>
+<div class="highlight highlight-javascript"><pre><span class="kd">var</span> <span class="nx">Fussy</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'fussy'</span><span class="p">);</span>
+<span class="kd">var</span> <span class="nx">fussy</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Fussy</span><span class="p">();</span>
+</pre></div>
+
+<h3>
+<a name="inserting-json-data" class="anchor" href="#inserting-json-data"><span class="octicon octicon-link"></span></a>Inserting JSON data</h3>
+
+<p>Then you can insert documents. You have a few ways of doing this.</p>
+
+<p>You can use use the <code>insert</code> method, which takes a JSON object, or an array of
+objects:</p>
+
+<div class="highlight highlight-javascript"><pre><span class="nx">fussy</span>
+  <span class="p">.</span><span class="nx">insert</span><span class="p">({</span> <span class="s1">'food'</span><span class="o">:</span> <span class="s1">'rice'</span><span class="p">,</span>  <span class="s1">'taste'</span><span class="o">:</span> <span class="s1">'good'</span><span class="p">});</span>
+  <span class="p">.</span><span class="nx">insert</span><span class="p">([</span>
+    <span class="p">{</span> <span class="s1">'food'</span><span class="o">:</span> <span class="s1">'salad'</span><span class="p">,</span> <span class="s1">'taste'</span><span class="o">:</span> <span class="s1">'good'</span><span class="p">},</span>
+    <span class="p">{</span> <span class="s1">'food'</span><span class="o">:</span> <span class="s1">'grass'</span><span class="p">,</span> <span class="s1">'taste'</span><span class="o">:</span> <span class="s1">'bad'</span> <span class="p">}</span>
+  <span class="p">]);</span>
+
+</pre></div>
+
+<h3>
+<a name="importing-a-dataset" class="anchor" href="#importing-a-dataset"><span class="octicon octicon-link"></span></a>Importing a dataset</h3>
+
+<p>After spending some time using Fussy on various datasets, I found it handy
+to write a small importer for CSV files. So here we go!</p>
+
+<p>The <code>import</code> function takes an input CSV file, and a list of columns as parameter:</p>
+
+<div class="highlight highlight-javascript"><pre><span class="kd">var</span> <span class="nx">data</span> <span class="o">=</span> <span class="nx">fussy</span><span class="p">.</span><span class="kr">import</span><span class="p">(</span><span class="s1">'thermal.csv'</span><span class="p">,</span> <span class="p">[</span> <span class="s1">'day'</span><span class="p">,</span> <span class="s1">'temperature'</span> <span class="p">]);</span>
+</pre></div>
+
+<p>This second parameter can be used to define types:</p>
+
+<div class="highlight highlight-javascript"><pre><span class="nx">fussy</span><span class="p">.</span><span class="kr">import</span><span class="p">(</span><span class="s1">'thermal.csv'</span><span class="p">,</span> <span class="p">[</span>
+    <span class="p">[</span><span class="s1">'day'</span><span class="p">,</span><span class="s1">'String'</span><span class="p">],</span>
+    <span class="p">[</span><span class="s1">'temperature'</span><span class="p">,</span><span class="s1">'Number'</span><span class="p">]</span>
+<span class="p">]);</span>
+</pre></div>
+
+<p>You can also define a dictionary of values, when using Strings:</p>
+
+<div class="highlight highlight-javascript"><pre><span class="nx">fussy</span><span class="p">.</span><span class="kr">import</span><span class="p">(</span><span class="s1">'thermal.csv'</span><span class="p">,</span> <span class="p">[</span>
+    <span class="p">[</span><span class="s1">'day'</span><span class="p">,</span> <span class="p">{</span>
+      <span class="s1">'mon'</span><span class="o">:</span> <span class="s1">'Monday'</span><span class="p">,</span>
+      <span class="s1">'tue'</span><span class="o">:</span> <span class="s1">'Tuesday'</span><span class="p">,</span>
+      <span class="s1">'wed'</span><span class="o">:</span> <span class="s1">'Wednesday'</span><span class="p">,</span>
+      <span class="s1">'thu'</span><span class="o">:</span> <span class="s1">'Thursday'</span><span class="p">,</span>
+      <span class="s1">'fri'</span><span class="o">:</span> <span class="s1">'Friday'</span><span class="p">,</span>
+      <span class="s1">'sat'</span><span class="o">:</span> <span class="s1">'Saturday'</span><span class="p">,</span>
+      <span class="s1">'sun'</span><span class="o">:</span> <span class="s1">'Sunday'</span>
+      <span class="p">}],</span>
+    <span class="p">[</span><span class="s1">'temperature'</span><span class="p">,</span><span class="s1">'Number'</span><span class="p">]</span>
+<span class="p">]);</span>
+</pre></div>
+
+<h3>
+<a name="using-the-dataset-function" class="anchor" href="#using-the-dataset-function"><span class="octicon octicon-link"></span></a>Using the dataset function</h3>
+
+<p>Sometimes you need to do some operations on a dataset before using it.</p>
+
+<p>For instance, maybe you only want to keep a subset of the dataset, or do
+random sampling, so you need access to the array before importing it.</p>
+
+<p>Fussy provides a function to create a dataset (array of JSONs), available
+in the <code>fussy.toolbox</code> object.</p>
+
+<p>The <code>fussy.toolbox.dataset</code> takes an input CSV file and a list of columns as
+parameter.</p>
+
+<p>It works like the import function:</p>
+
+<div class="highlight highlight-javascript"><pre><span class="kd">var</span> <span class="nx">data</span> <span class="o">=</span> <span class="nx">fussy</span><span class="p">.</span><span class="nx">toolbox</span><span class="p">.</span><span class="nx">dataset</span><span class="p">(</span><span class="s1">'thermal.csv'</span><span class="p">,</span> <span class="p">[</span> <span class="s1">'day'</span><span class="p">,</span> <span class="s1">'temperature'</span> <span class="p">]);</span>
+</pre></div>
+
+<p>You can then manipulate this array, before importing it. For instance:</p>
+
+<div class="highlight highlight-javascript"><pre><span class="kd">var</span> <span class="nx">data</span> <span class="o">=</span> <span class="nx">fussy</span><span class="p">.</span><span class="nx">toolbox</span><span class="p">.</span><span class="nx">shuffle</span><span class="p">(</span>
+  <span class="nx">fussy</span><span class="p">.</span><span class="nx">toolbox</span><span class="p">.</span><span class="nx">dataset</span><span class="p">(</span><span class="s1">'data.csv'</span><span class="p">,</span> <span class="s1">'schema.json'</span><span class="p">)</span>
+<span class="p">);</span>
+</pre></div>
+
+<p>Will load the dataset and shuffle it.</p>
+
+<h3>
+<a name="predicting-data" class="anchor" href="#predicting-data"><span class="octicon octicon-link"></span></a>Predicting data</h3>
+
+<div class="highlight highlight-javascript"><pre><span class="kd">var</span> <span class="nx">query</span> <span class="o">=</span> <span class="nx">fussy</span><span class="p">.</span><span class="nx">query</span><span class="p">({</span>
+  <span class="nx">select</span><span class="o">:</span> <span class="p">[</span><span class="s1">'column'</span><span class="p">],</span>
+  <span class="nx">where</span><span class="o">:</span> <span class="p">{</span>
+    <span class="nx">foo</span><span class="o">:</span> <span class="s1">''</span><span class="p">,</span>
+    <span class="nx">bar</span><span class="o">:</span> <span class="s1">''</span>
+  <span class="p">}</span>
+<span class="p">});</span>
+</pre></div>
+
+<h3>
+<a name="using-the-results" class="anchor" href="#using-the-results"><span class="octicon octicon-link"></span></a>Using the results</h3>
+
+<p>When you call the query object, what you get is a result set, or "view" on
+the data. This view has the following methods:</p>
+
+<h4>
+<a name="best" class="anchor" href="#best"><span class="octicon octicon-link"></span></a>best()</h4>
+
+<p>The <code>best</code> function returns the best value for a given field. It actually
+just takes the first element of the <code>all</code> function.</p>
+
+<p>Depending on the distribution and the category of problem you are trying to
+solve, this might not be the best choice for you.</p>
+
+<h4>
+<a name="mix" class="anchor" href="#mix"><span class="octicon octicon-link"></span></a>mix()</h4>
+
+<p>The <code>mix</code> compute the weighted average value for a numeric field.</p>
+
+<p>For instance, say there are 3 possible values for a "temperature" field: 10, 20, 40..</p>
+
+<p>While the <code>all</code> function will returns an array of value-&gt;weight, the <code>mix</code>
+function will directly returns you the weighted average, eg. 23.33.</p>
+
+<h4>
+<a name="all" class="anchor" href="#all"><span class="octicon octicon-link"></span></a>all()</h4>
+
+<p>The <code>all</code> function returns the distribution of values: an array sorted by weight,
+of all possible choices for the requested fields.</p>
+
+<p>This is actually an array of <code>(value, weight)</code> tuples.</p>
+
+<p>Use this function if you want access to raw data, and need to make
+multiple, weighted decisions. (eg. for investment, risk management use cases).</p>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/jbilcke">jbilcke</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
     </div>
-
-  
+    <script src="javascripts/scale.fix.js"></script>
+    
   </body>
 </html>
