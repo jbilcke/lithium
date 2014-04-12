@@ -28,11 +28,27 @@ BSD (see LICENCE.txt file).
 Fussy is an experimental project, and has a number of pitfalls:
 
 
- - all data must be loaded into memory (cannot use a remove db yet)
+ - all data must be loaded into memory (cannot use a remote db yet)
  - extremely slow (see mushroom demo..)
  - the "0" value is not supported well
  - string distance function is a bit broken, and will be rewritten
  - and probably many other bugs..
+
+
+## How it works
+
+### Algorithm
+
+The algorithm works as the following:
+
+For a given JSON object with some missing fields, it tries to determine the most probable value of these fields, by looking at all the past values, and computing the average.
+
+However, it does a weighted average: a different "trust" is given to each past object, depending on how close and relevant they are from the object to repair.
+
+For this, what Fussy do is iteraring over all the stored objects (in a map-reduce fashion), and computing a distance score, based on the similarity between values: strings, numbers..
+
+This distance will be used to weight the value of the missing field when computing the average.
+
 
 ## Quick-start
 
