@@ -1,7 +1,7 @@
 {
   "name": "fussy",
   "description": "Json prediction and recommendation engine",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "author": "Julian Bilcke <julian.bilcke@gmail.com>",
   "scripts": {
     "test": "node_modules/mocha/bin/mocha --bail --require chai --compilers coffee:coffee-script test/*.coffee",

@@ -7,9 +7,9 @@
 
 ## Summary
 
-Fussy is an inference engine for Node. You can use it to guess the state of missing values in a JSON object.
+Fussy is an inference engine for Node. You can use it to guess missing values in a JSON object.
 
-It works by trying to find the most probable values for missing attributes by scanning a database of previously seen objects, computing a weighted average based on similarity.
+It tried to find the most probable values for missing attributes by scanning a database of previously seen objects, computing a weighted average based on similarity.
 
 
 ## Examples
@@ -35,11 +35,12 @@ BSD (see LICENCE.txt file).
 
 Fussy is an experimental project, and has a number of pitfalls:
 
-
+ - no tests yet (but soon)
+ - code is alpha quality, not reviewed
  - all data must be loaded into memory (cannot use a remote db yet)
  - extremely slow (see mushroom demo..)
  - the "0" value is not supported well
- - string distance function is a bit broken, and will be rewritten
+ - not tested for strings (distance function is a bit broken, and will be rewritten)
  - and probably many other bugs..
 
 
@@ -67,7 +68,7 @@ This distance will be used to weight the value of the missing field when computi
 
 Go to your Node (and NPM-managed) project, and run:
 
-    $ npm add fussy --save
+    $ npm install fussy --save
 
 #### From sources
 
