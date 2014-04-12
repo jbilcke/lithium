@@ -1,6 +1,6 @@
 # Mushrooms
 
-*On Recommend&tion Of Edible Mushrooms*
+*On Recommendation Of Edible Mushrooms*
 
 ## Overview
 
@@ -9,26 +9,37 @@ database of pre-classified mushrooms, described by some features (ie. physical c
 
 ## Performance
 
+I prefer to shuffle the dataset, and run many tests, to avoid a "good sample"
+bias. So yeas, I haven't tested all the combinations, but so far I got:
+
+#### mush.js:
+
+100% accuracy (0% errors).
+
+#### bench.js:
+
 100% accuracy (0% errors).
 
 ## Files
 
-Scripts:
+#### Scripts:
 
 - mush.js: heavily commented example, with eye candy printing
 - bench.js: example using the benchmark function
 
-Data files:
+#### Data files:
 
 - data.csv: mushroom dataset, in CSV, containing a bit more than 8,100 mushrooms
 - schema.json: dataset schema, defining columns and types, used by the importer
 
 ## Dataset Information
 
-#### Data Source:
+#### Reference:
 
 Bache, K. & Lichman, M. (2013). UCI Machine Learning Repository [http://archive.ics.uci.edu/ml].
 Irvine, CA: University of California, School of Information and Computer Science.
+
+#### Source:
 
 https://archive.ics.uci.edu/ml/datasets/Mushroom
 
