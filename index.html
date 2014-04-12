@@ -7,6 +7,7 @@
 
     <link rel="stylesheet" href="stylesheets/styles.css">
     <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <script src="javascripts/scale.fix.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
     <!--[if lt IE 9]>
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -15,17 +16,18 @@
   <body>
     <div class="wrapper">
       <header>
-        <h1>Fussy</h1>
-        <p>JSON prediction and recommendation engine</p>
-
-        <p class="view"><a href="https://github.com/jbilcke/node-fussy">View the Project on GitHub <small>jbilcke/node-fussy</small></a></p>
-
+        <h1 class="header">Fussy</h1>
+        <p class="header">JSON prediction and recommendation engine</p>
 
         <ul>
-          <li><a href="https://github.com/jbilcke/node-fussy/zipball/master">Download <strong>ZIP File</strong></a></li>
-          <li><a href="https://github.com/jbilcke/node-fussy/tarball/master">Download <strong>TAR Ball</strong></a></li>
-          <li><a href="https://github.com/jbilcke/node-fussy">View On <strong>GitHub</strong></a></li>
+          <li class="download"><a class="buttons" href="https://github.com/jbilcke/node-fussy/zipball/master">Download ZIP</a></li>
+          <li class="download"><a class="buttons" href="https://github.com/jbilcke/node-fussy/tarball/master">Download TAR</a></li>
+          <li><a class="buttons github" href="https://github.com/jbilcke/node-fussy">View On GitHub</a></li>
         </ul>
+
+        <p class="header">This project is maintained by <a class="header name" href="https://github.com/jbilcke">jbilcke</a></p>
+
+
       </header>
       <section>
         <h1>
@@ -39,9 +41,9 @@
 <h2>
 <a name="summary" class="anchor" href="#summary"><span class="octicon octicon-link"></span></a>Summary</h2>
 
-<p>Fussy is an inference engine for Node. You can use it to guess the state of missing values in a JSON object.</p>
+<p>Fussy is an inference engine for Node. You can use it to guess missing values in a JSON object.</p>
 
-<p>It works by trying to find the most probable values for missing attributes by scanning a database of previously seen objects, computing a weighted average based on similarity.</p>
+<p>It tried to find the most probable values for missing attributes by scanning a database of previously seen objects, computing a weighted average based on similarity.</p>
 
 <h2>
 <a name="examples" class="anchor" href="#examples"><span class="octicon octicon-link"></span></a>Examples</h2>
@@ -69,10 +71,12 @@
 <p>Fussy is an experimental project, and has a number of pitfalls:</p>
 
 <ul>
+<li>no tests yet (but soon)</li>
+<li>code is alpha quality, not reviewed</li>
 <li>all data must be loaded into memory (cannot use a remote db yet)</li>
 <li>extremely slow (see mushroom demo..)</li>
 <li>the "0" value is not supported well</li>
-<li>string distance function is a bit broken, and will be rewritten</li>
+<li>not tested for strings (distance function is a bit broken, and will be rewritten)</li>
 <li>and probably many other bugs..</li>
 </ul><h2>
 <a name="how-it-works" class="anchor" href="#how-it-works"><span class="octicon octicon-link"></span></a>How it works</h2>
@@ -101,7 +105,7 @@
 
 <p>Go to your Node (and NPM-managed) project, and run:</p>
 
-<pre><code>$ npm add fussy --save
+<pre><code>$ npm install fussy --save
 </code></pre>
 
 <h4>
@@ -253,11 +257,10 @@ of all possible choices for the requested fields.</p>
 multiple, weighted decisions. (eg. for investment, risk management use cases).</p>
       </section>
       <footer>
-        <p>This project is maintained by <a href="https://github.com/jbilcke">jbilcke</a></p>
-        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+        <p><small>Hosted on <a href="http://pages.github.com">GitHub Pages</a> using the Dinky theme</small></p>
       </footer>
     </div>
-    <script src="javascripts/scale.fix.js"></script>
-    
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+		
   </body>
 </html>
