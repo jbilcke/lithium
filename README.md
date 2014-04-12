@@ -14,15 +14,17 @@ It works by trying to find the most probable values for missing attributes by sc
 
 ## Examples
 
-Basic examples included in the project:
+Demo examples (included in the project):
 
-- [Logic: playing with boolean and fuzzy truth tables](https://github.com/jbilcke/node-fussy/blob/master/examples/logic)
-- [Mushrooms: recommendation of mushrooms](https://github.com/jbilcke/node-fussy/blob/master/examples/mushrooms)
+- [Logic: playing with boolean and fuzzy truth tables](https://github.com/jbilcke/node-fussy/tree/master/examples/logic)
+- [Mushrooms: recommendation of mushrooms](https://github.com/jbilcke/node-fussy/tree/master/examples/mushrooms)
 
-Advanced examples:
+More examples:
 
-- [Wilt: detecting diseased trees in Quickbird imagery using Fussy](https://github.com/jbilcke/node-fussy-examples/blob/master/wilt)
-- [Sonar: categorization of sonar data into mines or rocks](https://github.com/jbilcke/node-fussy-examples/blob/master/sonar)
+- [Wilt: detecting diseased trees in Quickbird imagery](https://github.com/jbilcke/node-fussy-examples/tree/master/wilt)
+- [Sonar: categorization of sonar data into mines or rocks](https://github.com/jbilcke/node-fussy-examples/tree/master/sonar)
+- [Letters: letter recognition (OCR)](https://github.com/jbilcke/node-fussy-examples/tree/master/letters)
+
 
 
 ## License
