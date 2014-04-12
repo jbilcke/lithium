@@ -13,12 +13,19 @@
   "keywords": [
     "recommendation system",
     "recommendation engine",
-    "machine learning",
-    "deep learning"
+    "machine learning"
   ],
   "license": "BSD",
   "dependencies": {
+    "deck": "0.0.4",
+    "colors": "^0.6.2",
+    "csv-string": "^2.1.1",
+    "moment": "^2.5.1",
+    "progressbar": "^1.0.3"
   },
   "devDependencies": {
+    "coffee-script": "^1.7.1",
+    "chai": "^1.9.1",
+    "mocha": "^1.18.2"
   }
 }
