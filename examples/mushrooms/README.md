@@ -10,7 +10,7 @@ database of pre-classified mushrooms, described by some features (ie. physical c
 ## Performance
 
 I prefer to shuffle the dataset, and run many tests, to avoid a "good sample"
-bias. So yeas, I haven't tested all the combinations, but so far I got:
+bias. Granted, I haven't tested all the combinations, but so far I got:
 
 #### mush.js:
 

@@ -50,6 +50,7 @@ For this, what Fussy do is iteraring over all the stored objects (in a map-reduc
 This distance will be used to weight the value of the missing field when computing the average.
 
 
+
 ## Quick-start
 
 ### Installation
@@ -58,7 +59,7 @@ This distance will be used to weight the value of the missing field when computi
 
 Go to your Node (and NPM-managed) project, and run:
 
-   $ npm add fussy --save
+    $ npm add fussy --save
 
 #### From sources
 
@@ -140,7 +141,7 @@ Sometimes you need to do some operations on a dataset before using it.
 For instance, maybe you only want to keep a subset of the dataset, or do
 random sampling, so you need access to the array before importing it.
 
-Fussy provide a function to create a dataset (array of JSONs), available
+Fussy provides a function to create a dataset (array of JSONs), available
 in the `fussy.toolbox` object.
 
 The `fussy.toolbox.dataset` takes an input CSV file and a list of columns as
@@ -160,7 +161,7 @@ var data = fussy.toolbox.shuffle(
 );
 ```
 
-Will import and shuffle a dataset.
+Will load the dataset and shuffle it.
 
 
 ### Predicting data
