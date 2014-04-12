@@ -1,5 +1,4 @@
 utils = require './utils'
-moment = require 'moment'
 
 ###
 Extract features from a JSON object
@@ -20,7 +19,7 @@ extract = (event, facts=[], prefix="") ->
 
 
   for key, value of event
-    
+
     key = prefix + key
 
     # TODO we should use in priority the schema for this, then only detect type
