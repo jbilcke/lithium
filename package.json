@@ -1,31 +1,21 @@
 {
-  "name": "fussy",
-  "description": "Json prediction and recommendation engine",
-  "version": "0.1.2",
-  "author": "Julian Bilcke <julian.bilcke@gmail.com>",
-  "scripts": {
-    "test": "node_modules/mocha/bin/mocha --bail --require chai --compilers coffee:coffee-script test/*.coffee",
-    "build": "coffee --compile --output lib/ src/",
-    "watch": "coffee --watch --compile --output lib/ src/"
+  "name": "lithium.js",
+  "version": "1.0.0",
+  "description": "Lithium",
+  "main": "lithium.js",
+  "directories": {
+    "test": "tests"
   },
-  "main": "./lib/fussy",
-  "repository": "http://github.com/jbilcke/node-fussy.git",
-  "keywords": [
-    "recommendation system",
-    "recommendation engine",
-    "machine learning"
-  ],
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@bitbucket.org/datagica/lithium.git"
+  },
+  "author": "Julian Bilcke",
   "license": "BSD",
   "dependencies": {
-    "deck": "0.0.4",
-    "colors": "^0.6.2",
-    "csv-string": "^2.1.1",
-    "moment": "^2.5.1",
-    "progressbar": "^1.0.3"
-  },
-  "devDependencies": {
-    "coffee-script": "^1.7.1",
-    "chai": "^1.9.1",
-    "mocha": "^1.18.2"
+    "papaparse": "^4.1.2"
   }
 }
