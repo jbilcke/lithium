@@ -1,6 +1,12 @@
 # Lithium
 
-A library to solve simple logic equations in JS, in just about 200 lines of code.
+Demo: 
 
-Lithium works by identifying patterns in the data, and just-in-time compiling a
-a pattern matching function to solve them in a reverse way.
+```javascript
+
+const lithium = require('lithium.js')
+
+lithium("./tests/truth-table.csv")
+.solve([{ rule: null, P: "F", Q: "T", R: "T" }])
+.then(res => console.log(JSON.stringify((res))))
+```
