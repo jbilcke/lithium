@@ -142,6 +142,10 @@ function lithium(src, defaults = {}, db = null){
     solve: (data, opts = {}) => {
       if (!db) {
         db = new Promise((resolve, reject) => {
+          if (src.match(/\n/)) { // plain file
+            resolve(src)
+            return;
+          }
           const encoding = defaults.encoding ? defaults.encoding : 'utf8';
           fs.readFile(src, encoding, (err, csv) => {
             if (err) {
