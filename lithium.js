@@ -142,11 +142,24 @@ function lithium(src, defaults = {}, db = null){
     solve: (data, opts = {}) => {
       if (!db) {
         db = new Promise((resolve, reject) => {
-          if (src.match(/\n/)) { // plain file
+          const encoding = defaults.encoding ? defaults.encoding : 'utf8';
+          if (typeof src === 'string' && src.match(/\n/)) { // plain file
+            Papa.parse(csv, {
+              header: true,
+              complete: results => {
+                if (results.errors && results.errors.length && results.errors[0] && results.errors[0].row) {
+                  results.data.splice(results.errors[0].row, 1)
+                }
+                resolve(results.data);
+              }
+            })
+            return;
+          }
+
+          if (Array.isArray(src)) {
             resolve(src)
             return;
           }
-          const encoding = defaults.encoding ? defaults.encoding : 'utf8';
           fs.readFile(src, encoding, (err, csv) => {
             if (err) {
               reject(err)
