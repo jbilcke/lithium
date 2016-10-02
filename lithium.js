@@ -144,7 +144,7 @@ function lithium(src, defaults = {}, db = null){
         db = new Promise((resolve, reject) => {
           const encoding = defaults.encoding ? defaults.encoding : 'utf8';
           if (typeof src === 'string' && src.match(/\n/)) { // plain file
-            Papa.parsesrc, {
+            Papa.parse(src, {
               header: true,
               complete: results => {
                 if (results.errors && results.errors.length && results.errors[0] && results.errors[0].row) {
